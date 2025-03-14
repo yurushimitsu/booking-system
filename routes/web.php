@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CalendarController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +18,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/hello', function () {
-    return view('hello');
-});
+// Route::get('/calendar', function () {
+//     return view('calendar');
+// });
+
+Route::get('/calendar/{agent}', [CalendarController::class, 'getAgent'])->name('calendar');
+// Route::get('/calendar/{agent}/fetchAppointments', [CalendarControlRoute::get('/appointments/getAppointmentsForDate', [AppointmentController::class, 'getAppointmentsForDate']);
+Route::get('/appointments/getAppointmentsForDate', [CalendarController::class, 'getAppointmentsForDate']);
+
+Route::get('/fallback', function () {
+    return view('fallback'); // Assuming you have a fallback view
+})->name('custom.fallback');
+
+Route::fallback(function () {
+    return view('fallback');  
+}); 
