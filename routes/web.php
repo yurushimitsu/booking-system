@@ -22,9 +22,16 @@ Route::get('/', function () {
 //     return view('calendar');
 // });
 
-Route::get('/calendar/{agent}', [CalendarController::class, 'getAgent'])->name('calendar');
-// Route::get('/calendar/{agent}/fetchAppointments', [CalendarControlRoute::get('/appointments/getAppointmentsForDate', [AppointmentController::class, 'getAppointmentsForDate']);
-Route::get('/appointments/getAppointmentsForDate', [CalendarController::class, 'getAppointmentsForDate']);
+Route::get('/calendar/{agent}', [CalendarController::class, 'getAgent'])->where('agent', '[0-9]+')->name('calendar');
+
+Route::prefix('appointments')->group(function () {
+    Route::get('/getAppointmentsForDate', [CalendarController::class, 'getAppointmentsForDate']);
+    Route::get('/getFullyBookedDates', [CalendarController::class, 'getFullyBookedDates']);
+});
+
+Route::get('/admin/{agent}', [CalendarController::class, 'getAgentAdmin'])->where('agent', '[0-9]+')->name('adminCalendar');
+Route::get('/testing/{agent}', [CalendarController::class, 'getAllAppointments']);
+
 
 Route::get('/fallback', function () {
     return view('fallback'); // Assuming you have a fallback view
