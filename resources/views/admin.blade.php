@@ -56,8 +56,8 @@
                                 <input type="date" name="appointmentDate" id="appointmentDate" class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Type fullname" readonly required="">
                             </div>
                             <div class="col-span-2 sm:col-span-1">
-                                <label for="time" class="block mb-2 text-sm font-medium text-gray-900">Time</label>
-                                <select id="time" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                                <label for="appointmentTime" class="block mb-2 text-sm font-medium text-gray-900">Time</label>
+                                <select name="appointmentTime" id="appointmentTime" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
                                     <option selected="">Select time</option>
                                     <option class="" value="9">9:00 AM</option>
                                     <option class="" value="10">10:00 AM</option>
@@ -111,7 +111,7 @@
         initialView: 'dayGridMonth',
         
         weekends: false,
-        events: `/testing/${agentAccountNo}`, // Fetch appointments dynamically
+        events: `/allAppointments/${agentAccountNo}`, // Fetch appointments dynamically
     });
 
     calendar.render();

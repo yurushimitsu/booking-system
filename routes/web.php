@@ -18,19 +18,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/calendar', function () {
-//     return view('calendar');
-// });
-
 Route::get('/calendar/{agent}', [CalendarController::class, 'getAgent'])->where('agent', '[0-9]+')->name('calendar');
 
 Route::prefix('appointments')->group(function () {
     Route::get('/getAppointmentsForDate', [CalendarController::class, 'getAppointmentsForDate']);
     Route::get('/getFullyBookedDates', [CalendarController::class, 'getFullyBookedDates']);
+
+    Route::post('/postRequest', [CalendarController::class, 'postAppointmentRequest'])->name('postAppointmentRequest');
 });
 
 Route::get('/admin/{agent}', [CalendarController::class, 'getAgentAdmin'])->where('agent', '[0-9]+')->name('adminCalendar');
-Route::get('/testing/{agent}', [CalendarController::class, 'getAllAppointments']);
+Route::get('/allAppointments/{agent}', [CalendarController::class, 'getAllAppointments']);
 
 
 Route::get('/fallback', function () {

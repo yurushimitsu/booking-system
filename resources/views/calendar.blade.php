@@ -47,22 +47,22 @@
                         </button>
                     </div>
                     <!-- Modal body -->
-                    <form method="POST" data-action="" class="p-4 md:p-5">
+                    <form id="bookAppointment" method="POST" data-action="{{ route('postAppointmentRequest') }}" class="p-4 md:p-5">
+                        @csrf
                         <div class="grid gap-4 mb-4 grid-cols-2">
-                            {{-- <input type="hidden" name="appointmentDate" id="appointmentDate"> --}}
                             <input type="hidden" name="agentAccountNo" id="agentAccountNo">
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Date</label>
                                 <input type="date" name="appointmentDate" id="appointmentDate" class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Type fullname" readonly required="">
                             </div>
                             <div class="col-span-2 sm:col-span-1">
-                                <label for="time" class="block mb-2 text-sm font-medium text-gray-900">Time</label>
-                                <select id="time" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                                <label for="appointmentTime" class="block mb-2 text-sm font-medium text-gray-900">Time</label>
+                                <select name="appointmentTime" id="appointmentTime" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
                                     <option selected="">Select time</option>
-                                    <option class="" value="9">9:00 AM</option>
-                                    <option class="" value="10">10:00 AM</option>
-                                    <option class="" value="11">11:00 AM</option>
-                                    <option class="" value="12">12:00 PM</option>
+                                    <option class="" value="09:00:00">9:00 AM</option>
+                                    <option class="" value="10:00:00">10:00 AM</option>
+                                    <option class="" value="11:00:00">11:00 AM</option>
+                                    <option class="" value="12:00:00">12:00 PM</option>
                                 </select>
                             </div>
                             <div class="col-span-2 sm:col-span-1">
@@ -83,7 +83,7 @@
                             </div>
                             <div class="col-span-2">
                                 <label for="notes" class="block mb-2 text-sm font-medium text-gray-900">Notes</label>
-                                <textarea id="notes" rows="4" class="block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Write other notes here"></textarea>                    
+                                <textarea name="notes" id="notes" rows="4" class="block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Write other notes here"></textarea>                    
                             </div>
                         </div>
                         <div class="flex justify-end gap-2">
@@ -99,180 +99,157 @@
 </html>
 
 <script>
-  // document.addEventListener('DOMContentLoaded', function() {
-  //   var modal = document.getElementById('crud-modal');
-  //   var modalContent = modal.querySelector('.relative.bg-white');
+    document.addEventListener('DOMContentLoaded', function() {
+        var agentAccountNo = {{ $agentName->account_no }};
+        var modal = document.getElementById('crud-modal');
+        var modalContent = modal.querySelector('.relative.bg-white');
 
-  //   var calendarEl = document.getElementById('calendar');
-  //   var calendar = new FullCalendar.Calendar(calendarEl, {
-  //     initialView: 'dayGridMonth',
-  //     weekends: false,
-  //     // selectable range to only 1 year
-  //     validRange: function(nowDate) {
-  //       var endDay = nowDate.setMonth(nowDate.getMonth() + 12);
-  //       var today = nowDate.setMonth(nowDate.getMonth() - 12);
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            timeZone: 'Asia/Manila',
+            initialView: 'dayGridMonth',
+            weekends: false,
+            validRange: function(nowDate) {
+                var endDay = nowDate.setMonth(nowDate.getMonth() + 12);
+                var today = nowDate.setMonth(nowDate.getMonth() - 12);
+                return {
+                    start: today,
+                    end: endDay,
+                };
+            },
+            dateClick: function(info) {
+                var date = info.dateStr;
 
-  //       return {
-  //           start: today,
-  //           end: endDay,
-  //       };
-  //     },
-      
-  //     // On date click
-  //     dateClick: function(info) {
-  //         // Get the clicked date
-  //         var date = info.dateStr;
+                // Check if the selected date is fully booked before opening modal
+                fetch(`/appointments/getAppointmentsForDate?date=${date}&agent_account_no=${agentAccountNo}`)
+                    .then(response => response.json())
+                    .then(appointments => {
+                        if (appointments.length === 4) {
+                            // If all 4 time slots (9-12) are booked, show an alert
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'All time slots are booked',
+                                text: 'Please select another date.',
+                            });
+                        } else {
+                            // Proceed with booking modal if slots are available
+                            var formattedDate = new Date(date);
+                            var options = { year: 'numeric', month: 'long', day: 'numeric' };
+                            var formattedDateString = formattedDate.toLocaleDateString('en-US', options);
 
-  //         // Format the date into a more readable format (e.g., 'March 14, 2025')
-  //         var formattedDate = new Date(date);
-  //         var options = { year: 'numeric', month: 'long', day: 'numeric' };
-  //         var formattedDateString = formattedDate.toLocaleDateString('en-US', options); 
+                            $('#modal-title').html('Set booking on: ' + formattedDateString);
+                            document.getElementById('appointmentDate').value = date;
+                            document.getElementById('agentAccountNo').value = agentAccountNo;
 
-  //         $('#modal-title').html('Set booking on: ' + formattedDateString); // Set the header text with the formatted date
-  //         document.getElementById('appointmentDate').value = date; // Set the value of the hidden input with id "appointmentDate" to the selected date
-  //         document.getElementById('agentAccountNo').value = {{ $agentName->account_no }}; // Set the value of the id "agentAccountNo" to the agent's account number
+                            document.getElementById('crud-modal').classList.remove('hidden');
+                            document.getElementById('crud-modal').classList.add('block');
 
-  //         // Show the modal when a date is clicked
-  //         document.getElementById('crud-modal').classList.remove('hidden');
-  //         document.getElementById('crud-modal').classList.add('block');       
-  //     }
-  //   });
+                            fetchAppointmentsForDate(date, agentAccountNo);
+                        }
+                    })
+                    .catch(error => console.error('Error fetching appointments:', error));
+            },
+            events: function(fetchInfo, successCallback, failureCallback) {
+                fetch(`/appointments/getFullyBookedDates?agent_account_no=${agentAccountNo}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        var events = data.map(date => ({
+                            start: date, 
+                            display: 'background',
+                            backgroundColor: 'red'
+                        }));
+                        successCallback(events);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching fully booked dates:', error);
+                        failureCallback(error);
+                    });
+            }
+        });
 
-  //   // Close modal if user clicks outside of modal content
-  //   modal.addEventListener('click', function (e) {
-  //       // Check if the click is outside the modal content
-  //       if (!modalContent.contains(e.target)) {
-  //           modal.classList.add('hidden'); // Hide the modal
-  //       }
-  //   });
+        // Fetch the appointments for a given date
+        function fetchAppointmentsForDate(date, agentAccountNo) {
+            // Disable all time options first
+            var timeSelect = document.getElementById('appointmentTime');
+            var options = timeSelect.querySelectorAll('option');
+            options.forEach(function(option) {
+                option.disabled = false;
+                option.classList.remove('text-red-600');
+            });
 
-  //   document.querySelector('[data-modal-toggle="crud-modal"]').addEventListener('click', function() {
-  //     document.getElementById('crud-modal').classList.remove('block');
-  //     document.getElementById('crud-modal').classList.add('hidden');
-  //   });
-
-  //   document.getElementById('cancel').addEventListener('click', function() {
-  //     document.getElementById('crud-modal').classList.remove('block');
-  //     document.getElementById('crud-modal').classList.add('hidden');
-  //   });
-
-  //   calendar.render();
-  // });
-
-  document.addEventListener('DOMContentLoaded', function() {
-    var agentAccountNo = {{ $agentName->account_no }};
-    var modal = document.getElementById('crud-modal');
-    var modalContent = modal.querySelector('.relative.bg-white');
-
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        timeZone: 'Asia/Manila',
-        initialView: 'dayGridMonth',
-        weekends: false,
-        validRange: function(nowDate) {
-            var endDay = nowDate.setMonth(nowDate.getMonth() + 12);
-            var today = nowDate.setMonth(nowDate.getMonth() - 12);
-            return {
-                start: today,
-                end: endDay,
-            };
-        },
-        dateClick: function(info) {
-            var date = info.dateStr;
-            // var agentAccountNo = {{ $agentName->account_no }}; 
-
-            // Check if the selected date is fully booked before opening modal
+            // Send AJAX request to backend to get the existing appointments
             fetch(`/appointments/getAppointmentsForDate?date=${date}&agent_account_no=${agentAccountNo}`)
                 .then(response => response.json())
                 .then(appointments => {
-                    if (appointments.length === 4) {
-                        // If all 4 time slots (9-12) are booked, show an alert
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'All time slots are booked',
-                            text: 'Please select another date.',
-                        });
-                    } else {
-                        // Proceed with booking modal if slots are available
-                        var formattedDate = new Date(date);
-                        var options = { year: 'numeric', month: 'long', day: 'numeric' };
-                        var formattedDateString = formattedDate.toLocaleDateString('en-US', options);
-
-                        $('#modal-title').html('Set booking on: ' + formattedDateString);
-                        document.getElementById('appointmentDate').value = date;
-                        document.getElementById('agentAccountNo').value = agentAccountNo;
-
-                        document.getElementById('crud-modal').classList.remove('hidden');
-                        document.getElementById('crud-modal').classList.add('block');
-
-                        fetchAppointmentsForDate(date, agentAccountNo);
-                    }
+                    // Disable the corresponding time options based on the existing appointments
+                    appointments.forEach(function(appointmentTime) {
+                        var option = timeSelect.querySelector(`option[value="${appointmentTime}"]`);
+                        if (option) {
+                            option.disabled = true;
+                            option.classList.add('text-red-600');
+                        }
+                    });
                 })
                 .catch(error => console.error('Error fetching appointments:', error));
-        },
-        events: function(fetchInfo, successCallback, failureCallback) {
-            // var agentAccountNo = {{ $agentName->account_no }};
-
-            fetch(`/appointments/getFullyBookedDates?agent_account_no=${agentAccountNo}`)
-                .then(response => response.json())
-                .then(data => {
-                    var events = data.map(date => ({
-                        start: date, 
-                        display: 'background',
-                        backgroundColor: 'red'
-                    }));
-                    successCallback(events);
-                })
-                .catch(error => {
-                    console.error('Error fetching fully booked dates:', error);
-                    failureCallback(error);
-                });
         }
-    });
 
-    // Fetch the appointments for a given date
-    function fetchAppointmentsForDate(date, agentAccountNo) {
-        // Disable all time options first
-        var timeSelect = document.getElementById('time');
-        var options = timeSelect.querySelectorAll('option');
-        options.forEach(function(option) {
-            option.disabled = false;
-            option.classList.remove('text-red-600');
+        // Close modal if user clicks outside of modal content
+        modal.addEventListener('click', function (e) {
+            if (!modalContent.contains(e.target)) {
+                modal.classList.add('hidden');
+            }
         });
 
-        // Send AJAX request to backend to get the existing appointments
-        fetch(`/appointments/getAppointmentsForDate?date=${date}&agent_account_no=${agentAccountNo}`)
-            .then(response => response.json())
-            .then(appointments => {
-                // Disable the corresponding time options based on the existing appointments
-                appointments.forEach(function(appointmentTime) {
-                    var option = timeSelect.querySelector(`option[value="${appointmentTime}"]`);
-                    if (option) {
-                        option.disabled = true;
-                        option.classList.add('text-red-600');
-                    }
+        document.querySelector('[data-modal-toggle="crud-modal"]').addEventListener('click', function() {
+            document.getElementById('crud-modal').classList.remove('block');
+            document.getElementById('crud-modal').classList.add('hidden');
+        });
+
+        document.getElementById('cancel').addEventListener('click', function() {
+            document.getElementById('crud-modal').classList.remove('block');
+            document.getElementById('crud-modal').classList.add('hidden');
+        });
+
+        calendar.render();
+    });
+
+    document.getElementById('bookAppointment').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+
+        fetch(form.getAttribute('data-action'), {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: data.message,
+                }).then(() => {
+                    location.reload();
                 });
-            })
-            .catch(error => console.error('Error fetching appointments:', error));
-    }
-
-    // Close modal if user clicks outside of modal content
-    modal.addEventListener('click', function (e) {
-        if (!modalContent.contains(e.target)) {
-            modal.classList.add('hidden');
-        }
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: data.message,
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+            });
+        });
     });
-
-    document.querySelector('[data-modal-toggle="crud-modal"]').addEventListener('click', function() {
-        document.getElementById('crud-modal').classList.remove('block');
-        document.getElementById('crud-modal').classList.add('hidden');
-    });
-
-    document.getElementById('cancel').addEventListener('click', function() {
-        document.getElementById('crud-modal').classList.remove('block');
-        document.getElementById('crud-modal').classList.add('hidden');
-    });
-
-    calendar.render();
-  });
 </script>

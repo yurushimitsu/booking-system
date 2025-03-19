@@ -11,4 +11,8 @@ class Account extends Model
 
     public $timestamps = false;
     protected $guarded = [];
+
+    public function appointment() {
+        return $this->hasMany(Appointment::class, 'agent_no');
+    }
 }

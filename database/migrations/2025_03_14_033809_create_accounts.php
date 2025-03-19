@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
-            $table->integer('account_no');
+            $table->unsignedInteger('account_no')->unique();
             $table->string('agent_name');
             $table->timestamp('created_at')->useCurrent();
         });
