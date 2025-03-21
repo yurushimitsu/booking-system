@@ -32,7 +32,7 @@ Route::get('/allAppointments/{agent}', [CalendarController::class, 'getAllAppoin
 
 
 Route::get('/fallback', function () {
-    return view('fallback'); // Assuming you have a fallback view
+    return view('fallback'); 
 })->name('custom.fallback');
 
 Route::fallback(function () {

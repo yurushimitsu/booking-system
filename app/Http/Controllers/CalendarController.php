@@ -51,6 +51,7 @@ class CalendarController extends Controller
         return response()->json($fullyBookedDates);
     }
 
+    // Post appointment request and email
     public function postAppointmentRequest(Request $request) {
         $agent_no = htmlspecialchars($request->input('agentAccountNo'));
         $appointment_date = htmlspecialchars($request->input('appointmentDate'));
@@ -62,6 +63,7 @@ class CalendarController extends Controller
 
         $formalDate = date('F j, Y', strtotime($appointment_date)); // Date to be send in email
         $formalTime = date('g:i A', strtotime($appointment_time));  // Time to send in email
+        $agentName = Account::select('agent_name')->where('account_no', $agent_no)->first(); // Agent name to send in email
 
         $data = [
             'agent_no' => $agent_no,
@@ -99,11 +101,11 @@ class CalendarController extends Controller
                                   <br>
                                   <h3>Following are the details:</h3>
                                   <br>
-                                  <h4>Meeting With: '.$agent_no.'</h4><br>
-                                  <h4>Client Name: '.$client_name.'</h4><br>
-                                  <h4>Appointment Date: '.$formalDate.'</h4><br>
-                                  <h4>Appointment Time: '.$formalTime.'</h4><br>
-                                  <h4>Appointment Notes: '.$client_notes.'</h4><br>';
+                                  <h4><b>Meeting With: </b>'.$agentName->agent_name.'</h4>
+                                  <h4><b>Client Name: </b>'.$client_name.'</h4>
+                                  <h4><b>Appointment Date: </b>'.$formalDate.'</h4>
+                                  <h4><b>Appointment Time: </b>'.$formalTime.'</h4>
+                                  <h4><b>Appointment Notes: </b>'.$client_notes.'</h4>';
     
                 $mail->send();
                 return response()->json(['success' => true, 'message' => 'Data inserted and email sent successfully!']);
@@ -127,13 +129,14 @@ class CalendarController extends Controller
         }
     }
 
+    // Get all appointments of agent and display in calendar
     public function getAllAppointments($agent) {
         $allAppointments = Appointment::where('agent_no', $agent)->get();
 
         // Format the data for FullCalendar
         $events = $allAppointments->map(function ($appointment) {
             return [
-                'title' => 'Meeting with '.$appointment->client_name, // Or you can use $appointment->client_name
+                'title' => 'Meeting with '.$appointment->client_name, 
                 'start' => $appointment->appointment_date . 'T' . $appointment->appointment_time, // Format for FullCalendar
                 'backgroundColor' => '#007bff', // Customize color
                 'borderColor' => '#007bff',
