@@ -110,10 +110,14 @@
             initialView: 'dayGridMonth',
             weekends: false,
             validRange: function(nowDate) {
-                var endDay = nowDate.setMonth(nowDate.getMonth() + 12);
-                var today = nowDate.setMonth(nowDate.getMonth() - 12);
+                // var endDay = nowDate.setMonth(nowDate.getMonth() + 12);
+                // var today = nowDate.setMonth(nowDate.getMonth() - 12);
+                var tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1); // Only tomorrow's date is available for booking
+                var endDay = new Date(); 
+                endDay.setMonth(endDay.getMonth() + 6); // Limit calendar to 6 months 
                 return {
-                    start: today,
+                    start: tomorrow,
                     end: endDay,
                 };
             },

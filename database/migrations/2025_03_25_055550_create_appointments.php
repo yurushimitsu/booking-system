@@ -14,13 +14,15 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('agent_no');
-            $table->foreign('agent_no')->references('account_no')->on('accounts');
+            $table->foreign('agent_no')->references('account_no')->on('agents');
+            $table->string('appointment_type');
             $table->date('appointment_date');
             $table->time('appointment_time');
             $table->string('client_name');
             $table->string('client_email');
             $table->string('client_contact');
             $table->string('client_notes')->nullable();
+            $table->string('status');
             $table->timestamp('created_at')->useCurrent();
         });
     }

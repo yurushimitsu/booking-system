@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Account extends Model
+class Agent extends Model
 {
     use HasFactory;
 
     public $timestamps = false;
     protected $guarded = [];
 
-    public function appointment() {
-        return $this->hasMany(Appointment::class, 'agent_no');
+    public function agent() {
+        return $this->hasMany(Agent::class, 'agent_no');
     }
 }

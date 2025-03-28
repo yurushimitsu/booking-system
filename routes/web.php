@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\CalendarController;
+use App\Models\Appointment;
 use Illuminate\Support\Facades\Route;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,13 +22,26 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/calendar/{agent}', [CalendarController::class, 'getAgent'])->where('agent', '[0-9]+')->name('calendar');
+// Route::get('/agents', [DashboardController::class, 'getAllAgents'])->name('agents');
 
-Route::prefix('appointments')->group(function () {
-    Route::get('/getAppointmentsForDate', [CalendarController::class, 'getAppointmentsForDate']);
-    Route::get('/getFullyBookedDates', [CalendarController::class, 'getFullyBookedDates']);
+Route::prefix('agents')->group(function () {
+    Route::get('/all', [DashboardController::class, 'getAllAgents'])->name('agents');
+    Route::get('/search', [DashboardController::class, 'searchAgent'])->name('searchAgent');
 
-    Route::post('/postRequest', [CalendarController::class, 'postAppointmentRequest'])->name('postAppointmentRequest');
+    Route::get('/countries', [DashboardController::class, 'getCountries'])->name('getCountries');
+    Route::get('/agents/search-by-country', [DashboardController::class, 'searchAgentByCountry'])->name('searchAgentByCountry');
+
+});
+
+Route::prefix('appointment')->group(function () {
+    Route::get('/form', [AppointmentController::class, 'getAgentToForm'])->where('agent', '[0-9]+');
+    Route::post('/form', [AppointmentController::class, 'postAppointmentRequest'])->where('agent', '[0-9]+')->name('postAppointmentRequest');
+
+    Route::get('/getAppointmentsForDate', [AppointmentController::class, 'getAppointmentsForDate']);
+});
+
+Route::get('/admin', function () {
+    return view('admin.admin');
 });
 
 Route::get('/admin/{agent}', [CalendarController::class, 'getAgentAdmin'])->where('agent', '[0-9]+')->name('adminCalendar');

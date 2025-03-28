@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Account;
+use App\Models\Agent;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 
@@ -15,7 +15,7 @@ class CalendarController extends Controller
     // CLIENT SIDE START
     // Get agent's calendar based on link
     public function getAgent($agent) {
-        $agentName = Account::select('account_no', 'agent_name')
+        $agentName = Agent::select('account_no', 'agent_name')
                             ->where('account_no', $agent)
                             ->first();
         if ($agentName) {
@@ -23,6 +23,23 @@ class CalendarController extends Controller
         } else {
             return redirect()->route('custom.fallback');
         }
+    }
+
+    public function getAgentv2($agent) {
+        $agentName = Agent::select('account_no', 'agent_name')
+                            ->where('account_no', $agent)
+                            ->first();
+        if ($agentName) {
+            return view('calendarv2', compact('agentName'));
+        } else {
+            return redirect()->route('custom.fallback');
+        }
+    }
+
+    public function getAllAgents() {
+        $allAgents = Agent::all(); 
+        
+        return view('agents', compact('allAgents'));
     }
 
     // Get appointments per date
@@ -63,7 +80,7 @@ class CalendarController extends Controller
 
         $formalDate = date('F j, Y', strtotime($appointment_date)); // Date to be send in email
         $formalTime = date('g:i A', strtotime($appointment_time));  // Time to send in email
-        $agentName = Account::select('agent_name')->where('account_no', $agent_no)->first(); // Agent name to send in email
+        $agentName = Agent::select('agent_name')->where('account_no', $agent_no)->first(); // Agent name to send in email
 
         $data = [
             'agent_no' => $agent_no,
@@ -91,7 +108,7 @@ class CalendarController extends Controller
                 $mail->Port       = 465;                                     // TCP port to connect to
     
                 // Recipients
-                $mail->setFrom(''); // Sender's email address
+                $mail->setFrom('', 'FG Booking System'); // Sender's email address
                 $mail->addAddress($client_email);                 // Recipient's email address
     
                 // Content
@@ -101,11 +118,11 @@ class CalendarController extends Controller
                                   <br>
                                   <h3>Following are the details:</h3>
                                   <br>
-                                  <h4><b>Meeting With: </b>'.$agentName->agent_name.'</h4>
-                                  <h4><b>Client Name: </b>'.$client_name.'</h4>
-                                  <h4><b>Appointment Date: </b>'.$formalDate.'</h4>
-                                  <h4><b>Appointment Time: </b>'.$formalTime.'</h4>
-                                  <h4><b>Appointment Notes: </b>'.$client_notes.'</h4>';
+                                  <div><b>Meeting With: </b>'.$agentName->agent_name.'</div>
+                                  <div><b>Client Name: </b>'.$client_name.'</div>
+                                  <div><b>Appointment Date: </b>'.$formalDate.'</div>
+                                  <div><b>Appointment Time: </b>'.$formalTime.'</div>
+                                  <div><b>Appointment Notes: </b>'.$client_notes.'</div>';
     
                 $mail->send();
                 return response()->json(['success' => true, 'message' => 'Data inserted and email sent successfully!']);
@@ -119,7 +136,7 @@ class CalendarController extends Controller
 
     // ADMIN SIDE START
     public function getAgentAdmin($agent) {
-        $agentAdmin = Account::select('account_no', 'agent_name')
+        $agentAdmin = Agent::select('account_no', 'agent_name')
                             ->where('account_no', $agent)
                             ->first();
         if ($agentAdmin) {
