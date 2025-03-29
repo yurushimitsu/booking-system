@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\AdminController;
 use App\Models\Appointment;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -40,8 +41,11 @@ Route::prefix('appointment')->group(function () {
     Route::get('/getAppointmentsForDate', [AppointmentController::class, 'getAppointmentsForDate']);
 });
 
-Route::get('/admin', function () {
-    return view('admin.admin');
+Route::prefix('admin')->group(function () {
+    Route::get('/', function () {
+        return view('admin.admin');
+    });
+    Route::get('/appointments', [AdminController::class, 'getAppointments']);
 });
 
 Route::get('/admin/{agent}', [CalendarController::class, 'getAgentAdmin'])->where('agent', '[0-9]+')->name('adminCalendar');

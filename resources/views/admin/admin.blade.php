@@ -112,7 +112,7 @@
     <div class="flex flex-row pb-10">
         <div class="w-full bg-white rounded-2xl shadow-xl border border-gray-100">
             <div class="p-10">
-                <div class="flex flex-row justify-between items-end">
+                <div class="flex flex-row justify-between items-end pb-3">
                     <div class="text-2xl font-bold">
                         Your appointments
                     </div>
@@ -150,111 +150,67 @@
     <div class="flex flex-row pb-20">
         <div class="w-full bg-white rounded-2xl shadow-xl border border-gray-100">
             <div class="p-10">
-                <div class="pt-5 border-gray-200 flex sm:flex-row flex-col sm:space-x-5 rtl:space-x-reverse">
-                    <div class="flex flex-col">
-                        <div class="text-2xl font-bold pb-5">
-                            Calendar
+                <h2 class="text-2xl font-bold mb-4">Calendar</h2>
+                <div class="flex flex-col lg:flex-row">
+                    <!-- Side Calendar -->
+                    <div class="p-4 border-r border-gray-200 flex justify-center lg:block">
+                        <div class="w-64 bg-white p-4 rounded-lg shadow-md">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 id="monthYear" class="text-lg font-semibold"></h3>
+                                <div>
+                                    <button id="prevMonth" class="px-2 py-1 text-gray-600 cursor-pointer">
+                                        <svg class="w-3 h-3 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 1 1.3 6.326a.91.91 0 0 0 0 1.348L7 13"/>
+                                        </svg>
+                                    </button>
+                                    <button id="nextMonth" class="px-2 py-1 text-gray-600 cursor-pointer">
+                                        <svg class="w-3 h-3 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-5 text-center text-gray-500 font-semibold mb-2">
+                            </div>
+                            <div id="calendarDays" class="grid grid-cols-5 gap-2 text-center"></div>
                         </div>
-                        <div inline-datepicker datepicker-buttons datepicker-autoselect-today class="mx-auto sm:mx-0"></div>
                     </div>
-                    
-                    <div class="sm:ms-7 sm:ps-5 sm:border-s border-gray-200 w-full sm:max-w-[15rem] mt-5 sm:mt-0">
-                       <h3 class="text-gray-900 text-base font-medium mb-3 text-center">Wednesday 30 June 2024</h3>
-                       <button type="button" data-collapse-toggle="timetable" class="inline-flex items-center w-full py-2 px-5 me-2 justify-center text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 ">
-                          <svg class="w-4 h-4 text-gray-800 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                             <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd"/>
-                          </svg>
-                          Pick a time
-                       </button>
-                       <label class="sr-only">
-                       Pick a time
-                       </label>
-                       <ul id="timetable" class="grid w-full grid-cols-2 gap-2 mt-5">
-                          <li>
-                             <input type="radio" id="10-am" value="" class="hidden peer" name="timetable">
-                             <label for="10-am"
-                                class="inline-flex items-center justify-center w-full p-2 text-sm font-medium text-center bg-white border rounded-lg cursor-pointer text-blue-600 border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-600  peer-checked:text-white ">
-                             10:00 AM
-                             </label>
-                          </li>
-                          <li>
-                             <input type="radio" id="10-30-am" value="" class="hidden peer" name="timetable">
-                             <label for="10-30-am"
-                                class="inline-flex items-center justify-center w-full p-2 text-sm font-medium text-center bg-white border rounded-lg cursor-pointer text-blue-600 border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-600  peer-checked:text-white  ">
-                             10:30 AM
-                             </label>
-                          </li>
-                          <li>
-                             <input type="radio" id="11-am" value="" class="hidden peer" name="timetable">
-                             <label for="11-am"
-                                class="inline-flex items-center justify-center w-full p-2 text-sm font-medium text-center bg-white border rounded-lg cursor-pointer text-blue-600 border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-600  peer-checked:text-white  ">
-                             11:00 AM
-                             </label>
-                          </li>
-                          <li>
-                             <input type="radio" id="11-30-am" value="" class="hidden peer" name="timetable">
-                             <label for="11-30-am"
-                                class="inline-flex items-center justify-center w-full p-2 text-sm font-medium text-center bg-white border rounded-lg cursor-pointer text-blue-600 border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-600  peer-checked:text-white  ">
-                             11:30 AM
-                             </label>
-                          </li>
-                          <li>
-                             <input type="radio" id="12-am" value="" class="hidden peer" name="timetable" checked>
-                             <label for="12-am"
-                                class="inline-flex items-center justify-center w-full p-2 text-sm font-medium text-center bg-white border rounded-lg cursor-pointer text-blue-600 border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-600  peer-checked:text-white  ">
-                             12:00 AM
-                             </label>
-                          </li>
-                          <li>
-                             <input type="radio" id="12-30-pm" value="" class="hidden peer" name="timetable">
-                             <label for="12-30-pm"
-                                class="inline-flex items-center justify-center w-full p-2 text-sm font-medium text-center bg-white border rounded-lg cursor-pointer text-blue-600 border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-600  peer-checked:text-white  ">
-                             12:30 PM
-                             </label>
-                          </li>
-                          <li>
-                             <input type="radio" id="1-pm" value="" class="hidden peer" name="timetable">
-                             <label for="1-pm"
-                                class="inline-flex items-center justify-center w-full p-2 text-sm font-medium text-center bg-white border rounded-lg cursor-pointer text-blue-600 border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-600  peer-checked:text-white  ">
-                             01:00 PM
-                             </label>
-                          </li>
-                          <li>
-                             <input type="radio" id="1-30-pm" value="" class="hidden peer" name="timetable">
-                             <label for="1-30-pm"
-                                class="inline-flex items-center justify-center w-full p-2 text-sm font-medium text-center bg-white border rounded-lg cursor-pointer text-blue-600 border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-600  peer-checked:text-white  ">
-                             01:30 PM
-                             </label>
-                          </li>
-                          <li>
-                             <input type="radio" id="2-pm" value="" class="hidden peer" name="timetable">
-                             <label for="2-pm"
-                                class="inline-flex items-center justify-center w-full p-2 text-sm font-medium text-center bg-white border rounded-lg cursor-pointer text-blue-600 border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-600  peer-checked:text-white  ">
-                             02:00 PM
-                             </label>
-                          </li>
-                          <li>
-                             <input type="radio" id="2-30-pm" value="" class="hidden peer" name="timetable">
-                             <label for="2-30-pm"
-                                class="inline-flex items-center justify-center w-full p-2 text-sm font-medium text-center bg-white border rounded-lg cursor-pointer text-blue-600 border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-600  peer-checked:text-white  ">
-                             02:30 PM
-                             </label>
-                          </li>
-                          <li>
-                             <input type="radio" id="3-pm" value="" class="hidden peer" name="timetable">
-                             <label for="3-pm"
-                                class="inline-flex items-center justify-center w-full p-2 text-sm font-medium text-center bg-white border rounded-lg cursor-pointer text-blue-600 border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-600  peer-checked:text-white  ">
-                             03:00 PM
-                             </label>
-                          </li>
-                          <li>
-                             <input type="radio" id="3-30-pm" value="" class="hidden peer" name="timetable">
-                             <label for="3-30-pm"
-                                class="inline-flex items-center justify-center w-full p-2 text-sm font-medium text-center bg-white border rounded-lg cursor-pointer text-blue-600 border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-600  peer-checked:text-white  ">
-                             03:30 PM
-                             </label>
-                          </li>
-                       </ul>
+
+                    {{-- Weekly Schedules --}}
+                    <div class="w-full overflow-x-auto ps-3">
+                        <div class="min-w-max">
+                            <div class="flex flex-row w-full justify-between items-center">
+                                <button id="prevWeek" class="cursor-pointer">
+                                    <svg class="w-3 h-3 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 1 1.3 6.326a.91.91 0 0 0 0 1.348L7 13"/>
+                                    </svg>
+                                </button>
+                                <div class="grid grid-cols-5 gap-4 text-center font-bold w-full" id="weekDays"></div>
+                                <button id="nextWeek" class="cursor-pointer">
+                                    <svg class="w-3 h-3 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"/>
+                                    </svg>
+                                </button> 
+                            </div>
+                            <div class="grid grid-cols-5 gap-4 px-3" id="scheduleGrid"></div>
+                        </div>
+                    </div>
+
+                    <!-- Modal -->
+                    <div id="appointmentModal" class="fixed z-60 inset-0 flex items-center justify-center hidden">
+                        <div class="bg-white p-6 rounded-lg shadow-lg w-100">           
+                            <div class="flex items-center justify-between pb-3">
+                                <h2 id="modalDate" class="text-lg font-bold"></h2>
+                                <button id="closeModal" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="default-modal">
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                    </svg>
+                                    <span class="sr-only">Close modal</span>
+                                </button>
+                            </div>
+                            <div id="modalTitle"></div>
+                            <div id="modalBody" class="p-3"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -264,9 +220,233 @@
  
 </body>
 
-<script>
+<script>    
     $(document).ready(function() {
         $('#example').DataTable();
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+    let currentWeekOffset = 0;
+    const weekDays = document.getElementById("weekDays");
+    const scheduleGrid = document.getElementById("scheduleGrid");
+
+    // Modal elements
+    const modal = document.getElementById("appointmentModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalDate = document.getElementById("modalDate");
+    const modalBody = document.getElementById("modalBody");
+    const closeModal = document.getElementById("closeModal");
+
+    function fetchAppointments(offset) {
+        currentWeekOffset = offset;
+        fetch(`/admin/appointments?week=${offset}`)
+            .then(response => response.json())
+            .then(data => updateWeekView(data))
+            .catch(error => console.error("Error fetching appointments:", error));
+    }
+
+    function formatTime(time) {
+        let [hour, minute] = time.split(":");
+        let ampm = hour >= 12 ? "PM" : "AM";
+        hour = hour % 12 || 12;
+        return `${hour}:${minute} ${ampm}`;
+    }
+
+    function updateWeekView(data) {
+        const startOfWeek = new Date();
+        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1 + (currentWeekOffset * 7));
+
+        weekDays.innerHTML = "";
+        scheduleGrid.innerHTML = "";
+
+        for (let i = 0; i < 5; i++) {
+            let currentDate = new Date(startOfWeek);
+            currentDate.setDate(currentDate.getDate() + i);
+            let formattedDate = currentDate.toISOString().split("T")[0];
+            let readableDate = new Date(formattedDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+            let dayColumn = document.createElement("div");
+            dayColumn.innerHTML = `<h4 class="font-semibold uppercase">${currentDate.toLocaleDateString('en-US', { weekday: 'short' })}</h4>
+                                   <span class="text-gray-600">${currentDate.getDate()}</span>`;
+            weekDays.appendChild(dayColumn);
+
+            let scheduleColumn = document.createElement("div");
+            let times = ["08:00:00", "09:00:00", "10:00:00", "11:00:00", "13:00:00", "14:00:00", "15:00:00", "16:00:00"];
+
+            times.forEach(time => {
+                let appointment = data.find(app => app.appointment_date === formattedDate && app.appointment_time === time);
+                let timeSlot = document.createElement("div");
+                timeSlot.className = "p-2 rounded-lg mt-2 text-center cursor-pointer";
+
+                if (appointment) {
+                    if (appointment.status === "accepted") {
+                        timeSlot.classList.add("border", "border-orange-400", "text-orange-400", "font-medium");
+                        timeSlot.innerHTML = `${formatTime(time)} <br> Meeting`;
+                    } else if (appointment.status === "blocked") {
+                        timeSlot.classList.add("border", "border-red-600", "text-red-600", "font-medium");
+                        timeSlot.innerHTML = `${formatTime(time)} <br> Blocked`;
+                    } else {
+                        timeSlot.classList.add("border", "border-green-500", "text-green-500", "font-medium");
+                        timeSlot.innerHTML = `${formatTime(time)} <br> Available`;
+                    }
+                } else {
+                    timeSlot.classList.add("border", "border-green-500", "text-green-500", "font-medium");
+                    timeSlot.innerHTML = `${formatTime(time)} <br> Available`;
+                }
+
+                // Make sure every slot is clickable
+                timeSlot.addEventListener("click", () => {
+                    modal.classList.remove("hidden"); // Open modal
+
+                    if (appointment) {
+                        if (appointment.status === "accepted") {
+                            modalDate.textContent = `${readableDate}`;
+                            modalTitle.innerHTML = `
+                                <div class="flex flex-row justify-between w-full p-2 rounded-lg mt-2 text-center font-semibold border border-orange-400 text-orange-400">
+                                    <div>${appointment.appointment_type}</div>
+                                    <div>${formatTime(time)}</div>
+                                </div>
+                            
+                            `;
+                            modalBody.innerHTML = `
+                                <div class="grid grid-cols-2">
+                                    <div>Name:</div>
+                                    <div class="break-words">${appointment.client_name}</div>
+                                    <div>Email:</div>
+                                    <div class="break-words">${appointment.client_email}</div>
+                                    <div>Purpose:</div>
+                                    <div class="break-words">${appointment.appointment_type}</div>
+                                    <div>Status:</div>
+                                    <div class="break-words">${appointment.status}</div>
+                                </div>
+                            `;
+                        } else if (appointment.status === "blocked") {
+                            modalDate.textContent = `${readableDate}`;
+                            modalTitle.innerHTML = `
+                                <div class="flex flex-row justify-between w-full p-2 rounded-lg mt-2 text-center font-semibold border border-red-600 text-red-600">
+                                    <div>${appointment.appointment_type}</div>
+                                    <div>${formatTime(time)}</div>
+                                </div>
+                            `;
+                            modalBody.innerHTML = `
+                                <div class="grid grid-cols-2">
+                                    <div>Purpose:</div>
+                                    <div class="break-words">${appointment.client_notes}</div>
+                                </div>
+                            `;
+                        } else {
+                            modalDate.textContent = `${readableDate}`;
+                            modalTitle.innerHTML = `
+                                <div class="flex flex-row justify-between w-full p-2 rounded-lg mt-2 text-center font-semibold border border-green-500 text-green-500">
+                                    <div>Available</div>
+                                    <div>${formatTime(time)}</div>
+                                </div>
+                            `;
+                        }
+                    } else {
+                        modalDate.textContent = `${readableDate}`;
+                        modalTitle.innerHTML = `
+                            <div class="flex flex-row justify-between w-full p-2 rounded-lg mt-2 text-center font-semibold border border-green-500 text-green-500">
+                                <div>Available</div>
+                                <div>${formatTime(time)}</div>
+                            </div>
+                        `;
+                        modalBody.innerHTML = `
+                            <p>This is a time slot that's currently open on your schedule. If you're available, other employees may book this time to schedule an appointment with you.</p>
+                        `;
+                    }
+                });
+
+                scheduleColumn.appendChild(timeSlot);
+            });
+
+            scheduleGrid.appendChild(scheduleColumn);
+        }
+    }
+
+    // Close modal when button is clicked
+    closeModal.addEventListener("click", () => {
+        modal.classList.add("hidden");
+    });
+
+    // Close modal when clicking outside
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.classList.add("hidden");
+        }
+    });
+
+    document.getElementById("prevWeek").addEventListener("click", () => fetchAppointments(currentWeekOffset - 1));
+    document.getElementById("nextWeek").addEventListener("click", () => fetchAppointments(currentWeekOffset + 1));
+
+    fetchAppointments(0); // Load current week on page load
+});
+
+    // Side Calendar
+    function generateCalendar(year, month) {
+        const calendarDays = document.getElementById('calendarDays');
+        const monthYear = document.getElementById('monthYear');
+        
+        // First day of the month and total days in the month
+        const firstDay = new Date(year, month, 1).getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        // Get today's date
+        const today = new Date();
+        const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+        const todayDate = today.getDate();
+
+        // Update the month-year label
+        monthYear.textContent = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
+
+        calendarDays.innerHTML = '';
+
+        // Find the correct weekday index (Mon-Fri)
+        let offset = firstDay === 0 ? 6 : firstDay - 1; // Convert Sunday (0) to Saturday (6) and shift accordingly
+        if (offset >= 5) offset = 0; // Skip weekends
+
+        // Create empty divs for alignment
+        for (let i = 0; i < offset; i++) {
+            calendarDays.innerHTML += '<div></div>';
+        }
+
+        // Loop through the days and add only Monday-Friday
+        for (let day = 1; day <= daysInMonth; day++) {
+            let currentDay = new Date(year, month, day).getDay(); // Get day of the week (0-6)
+            if (currentDay >= 1 && currentDay <= 5) { // Only add Monday-Friday
+                let isToday = isCurrentMonth && day === todayDate;
+                let bgColor = isToday ? "bg-purple-300" : "bg-purple-100";
+
+                calendarDays.innerHTML += `<div class='w-8 h-8 flex items-center justify-center text-black ${bgColor} rounded-full cursor-pointer'>${day}</div>`;
+            }
+        }
+    }
+
+    // Automatically set the calendar to the current month
+    let today = new Date();
+    let currentYear = today.getFullYear();
+    let currentMonth = today.getMonth();
+
+    generateCalendar(currentYear, currentMonth);
+
+    document.getElementById('prevMonth').addEventListener('click', () => {
+        if (currentMonth === 0) {
+            currentMonth = 11;
+            currentYear--;
+        } else {
+            currentMonth--;
+        }
+        generateCalendar(currentYear, currentMonth);
+    });
+
+    document.getElementById('nextMonth').addEventListener('click', () => {
+        if (currentMonth === 11) {
+            currentMonth = 0;
+            currentYear++;
+        } else {
+            currentMonth++;
+        }
+        generateCalendar(currentYear, currentMonth);
     });
 </script>
     

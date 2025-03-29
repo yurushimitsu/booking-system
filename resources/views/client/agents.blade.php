@@ -23,7 +23,7 @@
             <div class="pb-10">
                 <form class="max-w-lg mx-auto" id="searchForm">
                     <div class="flex shadow-lg">
-                        <label for="search-dropdown" class="mb-2 text-sm font-medium text-gray-900 sr-only">Country</label>
+                        <label for="dropdown-button" class="mb-2 text-sm font-medium text-gray-900 sr-only">Country</label>
                         <button id="dropdown-button" data-dropdown-toggle="dropdown" class="w-30 shrink-0 z-10 inline-flex items-center justify-center py-2.5 px-2 text-sm font-medium text-center text-white bg-[#06064E] border border-gray-300 rounded-s-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300" type="button">
                             <div id="country-label">Country</div>
                             <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
@@ -69,6 +69,7 @@
         $(document).ready(function(){
             fetch_customer_data();
 
+            // ajax search start
             function fetch_customer_data(query = '') {
                 $.ajax({
                     url: "{{ route('searchAgent') }}",
@@ -131,7 +132,6 @@
                         
                         if (Array.isArray(data) && data.length > 0) {
                             data.forEach(function(country) {
-                                // Assuming 'id' and 'country' are the properties returned
                                 $('#dropdown ul').append(`
                                     <li>
                                         <button type="button" class="inline-flex w-full px-4 py-2 hover:bg-gray-100" data-country-name="${country.country}">
@@ -186,7 +186,7 @@
                                 `);
                             });
                         } else {
-                            $('#agentsList').html('<p>No agents found.</p>');
+                            $('#agentsList').html('<p class="text-black font-extrabold text-3xl">No agents found.</p>');
                         }
                     }
                 });

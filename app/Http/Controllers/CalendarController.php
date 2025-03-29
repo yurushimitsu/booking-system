@@ -6,6 +6,7 @@ use App\Models\Agent;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -162,4 +163,6 @@ class CalendarController extends Controller
 
         return response()->json($events);
     }
+
+    
 }
