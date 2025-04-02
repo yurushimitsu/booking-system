@@ -20,7 +20,7 @@
             <img src="{{ asset('img/fil-global-dark-logo.png') }}" class="h-20" alt="Flowbite Logo" />
         </a>
         <div class="flex justify-center mb-3">
-            <div class="relative w-25 h-25 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+            <div class="relative w-25 h-25 overflow-hidden bg-gray-100 rounded-full">
                 <svg class="absolute w-20 h-20 text-gray-400 right-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
             </div>
         </div>
@@ -152,7 +152,7 @@
             <div class="p-10">
                 <h2 class="text-2xl font-bold mb-4">Calendar</h2>
                 <div class="flex flex-col lg:flex-row">
-                    <!-- Side Calendar -->
+                    {{-- Side Calendar --}}
                     <div class="p-4 border-r border-gray-200 flex justify-center lg:block">
                         <div class="w-64 bg-white p-4 rounded-lg shadow-md">
                             <div class="flex justify-between items-center mb-4">
@@ -176,6 +176,220 @@
                         </div>
                     </div>
 
+                    {{-- Calendar Modal --}}
+                    <div id="calendarModal" class="fixed z-60 inset-0 flex items-center justify-center hidden">
+                        <div class="bg-white p-6 rounded-lg shadow-lg w-120">
+                            <div class="flex items-center justify-between pb-3">
+                                <h2 id="calendarTitle" class="text-2xl font-bold">Block your schedule</h2>
+                                <button id="closeCalendarModal" type="button" class="text-gray-400 bg-transparent cursor-pointer hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="default-modal">
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                    </svg>
+                                    <span class="sr-only">Close modal</span>
+                                </button>
+                            </div>
+                            <div class="mt-4">
+                                <div class="flex flex-row mb-3">
+                                    <div class="w-1/4">
+                                        Date Format:
+                                    </div>
+                                    <div class="w-3/4">
+                                        <input id="singleDayRadio" type="radio" checked name="default-radio" class="w-4 h-4 text-blue-900 bg-gray-100 border-gray-300 focus:ring-blue-900" onclick="toggleForm('singleDay')">
+                                        <label for="singleDayRadio" class="text-sm text-gray-900 pe-2">Single Day</label>
+                                        <input id="dateRangeRadio" type="radio" value="" name="default-radio" class="w-4 h-4 text-blue-900 bg-gray-100 border-gray-300 focus:ring-blue-900" onclick="toggleForm('dateRange')">
+                                        <label for="dateRangeRadio" class="text-sm text-gray-900">Date Range</label>
+                                    </div>                                            
+                                </div>
+
+                                {{-- Single Day Form --}}
+                                <form id="singleDayForm" class="singleDayForm" method="POST" action="{{ route('singleDayBlock') }}">
+                                    @csrf
+                                    <div class="flex flex-row mb-3">
+                                        <div class="w-1/4">
+                                            Date:
+                                        </div>
+                                        <div class="w-3/4">
+                                            <input type="date" name="calendar-date" id="calendar-date" class="block text-sm text-gray-900 bg-transparent p-1 rounded-lg border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />                            
+                                        </div>                                            
+                                    </div>
+                                    <div class="flex flex-row mb-3">
+                                        <div class="w-1/4">
+                                            Time:
+                                        </div>
+                                        <div class="w-3/4">
+                                            <div class="flex flex-wrap gap-2">
+                                                <div>
+                                                    <input id="s-checkbox-8am" type="checkbox" value="08:00:00" name="times[]" class="hidden peer s-time-checkbox">
+                                                    <label for="s-checkbox-8am" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        8:00 AM
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input id="s-checkbox-9am" type="checkbox" value="09:00:00" name="times[]" class="hidden peer s-time-checkbox">
+                                                    <label for="s-checkbox-9am" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        9:00 AM
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input id="s-checkbox-10am" type="checkbox" value="10:00:00" name="times[]" class="hidden peer s-time-checkbox">
+                                                    <label for="s-checkbox-10am" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        10:00 AM
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input id="s-checkbox-11am" type="checkbox" value="11:00:00" name="times[]" class="hidden peer s-time-checkbox">
+                                                    <label for="s-checkbox-11am" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        11:00 AM
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input id="s-checkbox-1pm" type="checkbox" value="13:00:00" name="times[]" class="hidden peer s-time-checkbox">
+                                                    <label for="s-checkbox-1pm" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        1:00 PM
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input id="s-checkbox-2pm" type="checkbox" value="14:00:00" name="times[]" class="hidden peer s-time-checkbox">
+                                                    <label for="s-checkbox-2pm" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        2:00 PM
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input id="s-checkbox-3pm" type="checkbox" value="15:00:00" name="times[]" class="hidden peer s-time-checkbox">
+                                                    <label for="s-checkbox-3pm" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        3:00 PM
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input id="s-checkbox-4pm" type="checkbox" value="16:00:00" name="times[]" class="hidden peer s-time-checkbox">
+                                                    <label for="s-checkbox-4pm" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        4:00 PM
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input id="s-select-all" type="checkbox" value="s-select-all" name="times[]" class="hidden peer s-time-checkbox">
+                                                    <label for="s-select-all" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        SELECT ALL
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-row mb-3">
+                                        <div class="w-1/4">
+                                            Reason:
+                                        </div>
+                                        <div class="w-3/4">
+                                            <textarea id="s-reason" name="s-reason" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-900 focus:border-blue-900" placeholder="Write your reason here..." required></textarea>
+                                        </div>                                            
+                                    </div>
+                                    <div class="flex">
+                                        <button id="block-single-day" type="submit" class="text-white bg-red-700 cursor-pointer hover:bg-red-900 focus:ring-2 focus:outline-none focus:ring-blue-900 font-medium rounded-full text-xs w-35 py-3 text-center">
+                                            BLOCK SCHEDULE
+                                        </button>
+                                    </div>
+                                </form>
+
+                                {{-- Date Range Form --}}
+                                <form id="dateRangeForm" class="dateRangeForm hidden" method="POST" action="{{ route('rangeBlock') }}">
+                                    @csrf
+                                    <div class="flex flex-row mb-3">
+                                        <div class="w-1/4">
+                                            Start Date:
+                                        </div>
+                                        <div class="w-3/4">
+                                            <input type="date" name="start-date" id="start-date" class="block text-sm text-gray-900 bg-transparent p-1 rounded-lg border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-row mb-3">
+                                        <div class="w-1/4">
+                                            End Date:
+                                        </div>
+                                        <div class="w-3/4">
+                                            <input type="date" name="end-date" id="end-date" class="block text-sm text-gray-900 bg-transparent p-1 rounded-lg border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-row mb-3">
+                                        <div class="w-1/4">
+                                            Time:
+                                        </div>
+                                        <div class="w-3/4">
+                                            <div class="flex flex-wrap gap-2">
+                                                <div>
+                                                    <input id="r-checkbox-8am" type="checkbox" value="08:00:00" name="times[]" class="hidden peer r-time-checkbox">
+                                                    <label for="r-checkbox-8am" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        8:00 AM
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input id="r-checkbox-9am" type="checkbox" value="09:00:00" name="times[]" class="hidden peer r-time-checkbox">
+                                                    <label for="r-checkbox-9am" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        9:00 AM
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input id="r-checkbox-10am" type="checkbox" value="10:00:00" name="times[]" class="hidden peer r-time-checkbox">
+                                                    <label for="r-checkbox-10am" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        10:00 AM
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input id="r-checkbox-11am" type="checkbox" value="11:00:00" name="times[]" class="hidden peer r-time-checkbox">
+                                                    <label for="r-checkbox-11am" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        11:00 AM
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input id="r-checkbox-1pm" type="checkbox" value="13:00:00" name="times[]" class="hidden peer r-time-checkbox">
+                                                    <label for="r-checkbox-1pm" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        1:00 PM
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input id="r-checkbox-2pm" type="checkbox" value="14:00:00" name="times[]" class="hidden peer r-time-checkbox">
+                                                    <label for="r-checkbox-2pm" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        2:00 PM
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input id="r-checkbox-3pm" type="checkbox" value="15:00:00" name="times[]" class="hidden peer r-time-checkbox">
+                                                    <label for="r-checkbox-3pm" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        3:00 PM
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input id="r-checkbox-4pm" type="checkbox" value="16:00:00" name="times[]" class="hidden peer r-time-checkbox">
+                                                    <label for="r-checkbox-4pm" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        4:00 PM
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input id="r-select-all" type="checkbox" value="r-select-all" name="times[]" class="hidden peer r-time-checkbox">
+                                                    <label for="r-select-all" class="flex items-center justify-center p-2 bg-gray-100 rounded-lg text-xs font-medium text-gray-900 cursor-pointer transition-all duration-300 peer-checked:border-gray-300 peer-checked:bg-blue-900 peer-checked:text-white">
+                                                        SELECT ALL
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-row mb-3">
+                                        <div class="w-1/4">
+                                            Reason:
+                                        </div>
+                                        <div class="w-3/4">
+                                            <textarea id="r-reason" name="r-reason" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-900 focus:border-blue-900" placeholder="Write your reason here..." required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="flex">
+                                        <button id="block-range" type="submit" class="text-white bg-red-700 cursor-pointer hover:bg-red-900 focus:ring-2 focus:outline-none focus:ring-blue-900 font-medium rounded-full text-xs w-35 py-3 text-center">
+                                            BLOCK SCHEDULE
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- Weekly Schedules --}}
                     <div class="w-full overflow-x-auto ps-3">
                         <div class="min-w-max">
@@ -196,20 +410,25 @@
                         </div>
                     </div>
 
-                    <!-- Modal -->
-                    <div id="appointmentModal" class="fixed z-60 inset-0 flex items-center justify-center hidden">
+                    {{-- Timeslot Modal --}}
+                    <div id="timeslotModal" class="fixed z-60 inset-0 flex items-center justify-center hidden">
                         <div class="bg-white p-6 rounded-lg shadow-lg w-100">           
-                            <div class="flex items-center justify-between pb-3">
-                                <h2 id="modalDate" class="text-lg font-bold"></h2>
-                                <button id="closeModal" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="default-modal">
-                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                    </svg>
-                                    <span class="sr-only">Close modal</span>
-                                </button>
+                            <div id="timeslotHeader" class="flex items-center justify-between pb-3">
+                                <h2 id="timeslotDate" class="text-lg font-bold"></h2>
+                                <div id="buttons" class="flex flex-row gap-1">
+                                    <div id="timeslotOtherButtons"></div>
+                                    <div>
+                                        <button id="closeTimeslotModal" type="button" class="text-gray-400 bg-transparent cursor-pointer hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="default-modal">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                            </svg>
+                                            <span class="sr-only">Close modal</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div id="modalTitle"></div>
-                            <div id="modalBody" class="p-3"></div>
+                            <div id="timeslotTitle"></div>
+                            <div id="timeslotBody" class="p-3"></div>
                         </div>
                     </div>
                 </div>
@@ -225,204 +444,286 @@
         $('#example').DataTable();
     });
 
+    document.getElementById('singleDayForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+
+        fetch(form.getAttribute('action'), {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Timeslots Blocked!',
+                    text: data.message,
+                }).then(() => {
+                    window.location.reload();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: data.message,
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+            });
+        });
+    });
+
+    document.getElementById('dateRangeForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+
+        fetch(form.getAttribute('action'), {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Timeslots Blocked!',
+                    text: data.message,
+                }).then(() => {
+                    window.location.reload();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: data.message,
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+            });
+        });
+    });
+
     document.addEventListener("DOMContentLoaded", function() {
-    let currentWeekOffset = 0;
-    const weekDays = document.getElementById("weekDays");
-    const scheduleGrid = document.getElementById("scheduleGrid");
+        let currentWeekOffset = 0;
+        const weekDays = document.getElementById("weekDays");
+        const scheduleGrid = document.getElementById("scheduleGrid");
 
-    // Modal elements
-    const modal = document.getElementById("appointmentModal");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalDate = document.getElementById("modalDate");
-    const modalBody = document.getElementById("modalBody");
-    const closeModal = document.getElementById("closeModal");
+        // Modal elements
+        const timeslotModal = document.getElementById("timeslotModal");
+        const timeslotTitle = document.getElementById("timeslotTitle");
+        const timeslotOtherButtons = document.getElementById("timeslotOtherButtons");
+        const timeslotDate = document.getElementById("timeslotDate");
+        const timeslotBody = document.getElementById("timeslotBody");
+        const closeTimeslotModal = document.getElementById("closeTimeslotModal");
 
-    function fetchAppointments(offset) {
-        currentWeekOffset = offset;
-        fetch(`/admin/appointments?week=${offset}`)
-            .then(response => response.json())
-            .then(data => updateWeekView(data))
-            .catch(error => console.error("Error fetching appointments:", error));
-    }
+        function fetchAppointments(offset) {
+            currentWeekOffset = offset;
+            fetch(`/admin/appointments?week=${offset}`)
+                .then(response => response.json())
+                .then(data => updateWeekView(data))
+                .catch(error => console.error("Error fetching appointments:", error));
+        }
 
-    function formatTime(time) {
-        let [hour, minute] = time.split(":");
-        let ampm = hour >= 12 ? "PM" : "AM";
-        hour = hour % 12 || 12;
-        return `${hour}:${minute} ${ampm}`;
-    }
+        function formatTime(time) {
+            let [hour, minute] = time.split(":");
+            let ampm = hour >= 12 ? "PM" : "AM";
+            hour = hour % 12 || 12;
+            return `${hour}:${minute} ${ampm}`;
+        }
 
-    function updateWeekView(data) {
-        const startOfWeek = new Date();
-        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1 + (currentWeekOffset * 7));
+        function updateWeekView(data) {
+            const startOfWeek = new Date();
+            startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1 + (currentWeekOffset * 7));
 
-        weekDays.innerHTML = "";
-        scheduleGrid.innerHTML = "";
+            weekDays.innerHTML = "";
+            scheduleGrid.innerHTML = "";
 
-        for (let i = 0; i < 5; i++) {
-            let currentDate = new Date(startOfWeek);
-            currentDate.setDate(currentDate.getDate() + i);
-            let formattedDate = currentDate.toISOString().split("T")[0];
-            let readableDate = new Date(formattedDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            for (let i = 0; i < 5; i++) {
+                let currentDate = new Date(startOfWeek);
+                currentDate.setDate(currentDate.getDate() + i);
+                let formattedDate = currentDate.toISOString().split("T")[0];
+                let readableDate = new Date(formattedDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
-            let dayColumn = document.createElement("div");
-            dayColumn.innerHTML = `<h4 class="font-semibold uppercase">${currentDate.toLocaleDateString('en-US', { weekday: 'short' })}</h4>
-                                   <span class="text-gray-600">${currentDate.getDate()}</span>`;
-            weekDays.appendChild(dayColumn);
+                let dayColumn = document.createElement("div");
+                dayColumn.innerHTML = `<h4 class="font-semibold uppercase">${currentDate.toLocaleDateString('en-US', { weekday: 'short' })}</h4>
+                                    <span class="text-gray-600">${currentDate.getDate()}</span>`;
+                weekDays.appendChild(dayColumn);
 
-            let scheduleColumn = document.createElement("div");
-            let times = ["08:00:00", "09:00:00", "10:00:00", "11:00:00", "13:00:00", "14:00:00", "15:00:00", "16:00:00"];
+                let scheduleColumn = document.createElement("div");
+                let times = ["08:00:00", "09:00:00", "10:00:00", "11:00:00", "13:00:00", "14:00:00", "15:00:00", "16:00:00"];
 
-            times.forEach(time => {
-                let appointment = data.find(app => app.appointment_date === formattedDate && app.appointment_time === time);
-                let timeSlot = document.createElement("div");
-                timeSlot.className = "p-2 rounded-lg mt-2 text-center cursor-pointer";
+                times.forEach(time => {
+                    let appointment = data.find(app => app.appointment_date === formattedDate && app.appointment_time === time);
+                    let timeSlot = document.createElement("div");
+                    timeSlot.className = "p-2 rounded-lg mt-2 text-center cursor-pointer";
 
-                if (appointment) {
-                    if (appointment.status === "accepted") {
-                        timeSlot.classList.add("border", "border-orange-400", "text-orange-400", "font-medium");
-                        timeSlot.innerHTML = `${formatTime(time)} <br> Meeting`;
-                    } else if (appointment.status === "blocked") {
-                        timeSlot.classList.add("border", "border-red-600", "text-red-600", "font-medium");
-                        timeSlot.innerHTML = `${formatTime(time)} <br> Blocked`;
+                    if (appointment) {
+                        if (appointment.status === "accepted") {
+                            timeSlot.classList.add("border", "border-orange-400", "text-orange-400", "font-medium");
+                            timeSlot.innerHTML = `${formatTime(time)} <br> Meeting`;
+                        } else if (appointment.status === "blocked") {
+                            timeSlot.classList.add("border", "border-red-600", "text-red-600", "font-medium");
+                            timeSlot.innerHTML = `${formatTime(time)} <br> Blocked`;
+                        } else {
+                            timeSlot.classList.add("border", "border-green-500", "text-green-500", "font-medium");
+                            timeSlot.innerHTML = `${formatTime(time)} <br> Available`;
+                        }
                     } else {
                         timeSlot.classList.add("border", "border-green-500", "text-green-500", "font-medium");
                         timeSlot.innerHTML = `${formatTime(time)} <br> Available`;
                     }
-                } else {
-                    timeSlot.classList.add("border", "border-green-500", "text-green-500", "font-medium");
-                    timeSlot.innerHTML = `${formatTime(time)} <br> Available`;
-                }
 
-                // Make sure every slot is clickable
-                timeSlot.addEventListener("click", () => {
-                    modal.classList.remove("hidden"); // Open modal
+                    // Make sure every slot is clickable
+                    timeSlot.addEventListener("click", () => {
+                        timeslotModal.classList.remove("hidden"); // Open modal
 
-                    if (appointment) {
-                        if (appointment.status === "accepted") {
-                            modalDate.textContent = `${readableDate}`;
-                            modalTitle.innerHTML = `
-                                <div class="flex flex-row justify-between w-full p-2 rounded-lg mt-2 text-center font-semibold border border-orange-400 text-orange-400">
-                                    <div>${appointment.appointment_type}</div>
-                                    <div>${formatTime(time)}</div>
-                                </div>
-                            
-                            `;
-                            modalBody.innerHTML = `
-                                <div class="grid grid-cols-2">
-                                    <div>Name:</div>
-                                    <div class="break-words">${appointment.client_name}</div>
-                                    <div>Email:</div>
-                                    <div class="break-words">${appointment.client_email}</div>
-                                    <div>Purpose:</div>
-                                    <div class="break-words">${appointment.appointment_type}</div>
-                                    <div>Status:</div>
-                                    <div class="break-words">${appointment.status}</div>
-                                </div>
-                            `;
-                        } else if (appointment.status === "blocked") {
-                            modalDate.textContent = `${readableDate}`;
-                            modalTitle.innerHTML = `
-                                <div class="flex flex-row justify-between w-full p-2 rounded-lg mt-2 text-center font-semibold border border-red-600 text-red-600">
-                                    <div>${appointment.appointment_type}</div>
-                                    <div>${formatTime(time)}</div>
-                                </div>
-                            `;
-                            modalBody.innerHTML = `
-                                <div class="grid grid-cols-2">
-                                    <div>Purpose:</div>
-                                    <div class="break-words">${appointment.client_notes}</div>
-                                </div>
-                            `;
+                        if (appointment) {
+                            if (appointment.status === "accepted") {
+                                timeslotDate.textContent = `${readableDate}`;
+                                timeslotTitle.innerHTML = `
+                                    <div class="flex flex-row justify-between w-full p-2 rounded-lg mt-2 text-center font-semibold border border-orange-400 text-orange-400">
+                                        <div>${appointment.appointment_type}</div>
+                                        <div>${formatTime(time)}</div>
+                                    </div>
+                                
+                                `;
+                                timeslotBody.innerHTML = `
+                                    <div class="grid grid-cols-2">
+                                        <div>Name:</div>
+                                        <div class="break-words">${appointment.client_name}</div>
+                                        <div>Email:</div>
+                                        <div class="break-words">${appointment.client_email}</div>
+                                        <div>Purpose:</div>
+                                        <div class="break-words">${appointment.appointment_type}</div>
+                                        <div>Status:</div>
+                                        <div class="break-words">${appointment.status}</div>
+                                    </div>
+                                `;
+                            } else if (appointment.status === "blocked") {
+                                timeslotDate.textContent = `${readableDate}`;
+                                timeslotOtherButtons.innerHTML = `
+                                        <button id="deleteBlockedSlot" type="button" class="text-white bg-red-600 cursor-pointer hover:bg-red-800 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="default-modal">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                            </svg>
+                                            <span class="sr-only">Delete blocked timeslot</span>
+                                        </button>
+                                `;
+                                timeslotTitle.innerHTML = `
+                                    <div class="flex flex-row justify-between w-full p-2 rounded-lg mt-2 text-center font-semibold border border-red-600 text-red-600">
+                                        <div>Blocked</div>
+                                        <div>${formatTime(time)}</div>
+                                    </div>
+                                `;
+                                timeslotBody.innerHTML = `
+                                    <div class="grid grid-cols-2">
+                                        <div>Purpose:</div>
+                                        <div class="break-words">${appointment.client_notes}</div>
+                                    </div>
+                                `;
+                            } else {
+                                timeslotDate.textContent = `${readableDate}`;
+                                timeslotTitle.innerHTML = `
+                                    <div class="flex flex-row justify-between w-full p-2 rounded-lg mt-2 text-center font-semibold border border-green-500 text-green-500">
+                                        <div>Available</div>
+                                        <div>${formatTime(time)}</div>
+                                    </div>
+                                `;
+                            }
                         } else {
-                            modalDate.textContent = `${readableDate}`;
-                            modalTitle.innerHTML = `
+                            timeslotDate.textContent = `${readableDate}`;
+                            timeslotTitle.innerHTML = `
                                 <div class="flex flex-row justify-between w-full p-2 rounded-lg mt-2 text-center font-semibold border border-green-500 text-green-500">
                                     <div>Available</div>
                                     <div>${formatTime(time)}</div>
                                 </div>
                             `;
+                            timeslotBody.innerHTML = `
+                                <p>This is a time slot that's currently open on your schedule. If you're available, other employees may book this time to schedule an appointment with you.</p>
+                            `;
                         }
-                    } else {
-                        modalDate.textContent = `${readableDate}`;
-                        modalTitle.innerHTML = `
-                            <div class="flex flex-row justify-between w-full p-2 rounded-lg mt-2 text-center font-semibold border border-green-500 text-green-500">
-                                <div>Available</div>
-                                <div>${formatTime(time)}</div>
-                            </div>
-                        `;
-                        modalBody.innerHTML = `
-                            <p>This is a time slot that's currently open on your schedule. If you're available, other employees may book this time to schedule an appointment with you.</p>
-                        `;
-                    }
+                    });
+
+                    scheduleColumn.appendChild(timeSlot);
                 });
 
-                scheduleColumn.appendChild(timeSlot);
-            });
-
-            scheduleGrid.appendChild(scheduleColumn);
+                scheduleGrid.appendChild(scheduleColumn);
+            }
         }
-    }
 
-    // Close modal when button is clicked
-    closeModal.addEventListener("click", () => {
-        modal.classList.add("hidden");
+        // Close modal when button is clicked
+        closeTimeslotModal.addEventListener("click", () => {
+            timeslotModal.classList.add("hidden");
+        });
+
+        // Close modal when clicking outside
+        timeslotModal.addEventListener("click", (e) => {
+            if (e.target === timeslotModal) {
+                timeslotModal.classList.add("hidden");
+            }
+        });
+
+        document.getElementById("prevWeek").addEventListener("click", () => fetchAppointments(currentWeekOffset - 1));
+        document.getElementById("nextWeek").addEventListener("click", () => fetchAppointments(currentWeekOffset + 1));
+
+        fetchAppointments(0); // Load current week on page load
     });
-
-    // Close modal when clicking outside
-    modal.addEventListener("click", (e) => {
-        if (e.target === modal) {
-            modal.classList.add("hidden");
-        }
-    });
-
-    document.getElementById("prevWeek").addEventListener("click", () => fetchAppointments(currentWeekOffset - 1));
-    document.getElementById("nextWeek").addEventListener("click", () => fetchAppointments(currentWeekOffset + 1));
-
-    fetchAppointments(0); // Load current week on page load
-});
 
     // Side Calendar
     function generateCalendar(year, month) {
         const calendarDays = document.getElementById('calendarDays');
         const monthYear = document.getElementById('monthYear');
-        
-        // First day of the month and total days in the month
-        const firstDay = new Date(year, month, 1).getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
+
+        const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-        // Get today's date
         const today = new Date();
         const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
         const todayDate = today.getDate();
 
-        // Update the month-year label
         monthYear.textContent = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
 
         calendarDays.innerHTML = '';
 
-        // Find the correct weekday index (Mon-Fri)
-        let offset = firstDay === 0 ? 6 : firstDay - 1; // Convert Sunday (0) to Saturday (6) and shift accordingly
-        if (offset >= 5) offset = 0; // Skip weekends
+        let offset = firstDay === 0 ? 6 : firstDay - 1;
+        if (offset >= 5) offset = 0;
 
-        // Create empty divs for alignment
         for (let i = 0; i < offset; i++) {
             calendarDays.innerHTML += '<div></div>';
         }
 
-        // Loop through the days and add only Monday-Friday
         for (let day = 1; day <= daysInMonth; day++) {
-            let currentDay = new Date(year, month, day).getDay(); // Get day of the week (0-6)
-            if (currentDay >= 1 && currentDay <= 5) { // Only add Monday-Friday
+            let currentDay = new Date(year, month, day).getDay();
+            if (currentDay >= 1 && currentDay <= 5) {
                 let isToday = isCurrentMonth && day === todayDate;
                 let bgColor = isToday ? "bg-purple-300" : "bg-purple-100";
 
-                calendarDays.innerHTML += `<div class='w-8 h-8 flex items-center justify-center text-black ${bgColor} rounded-full cursor-pointer'>${day}</div>`;
+                calendarDays.innerHTML += `<div class='w-8 h-8 flex items-center justify-center text-black ${bgColor} rounded-full cursor-pointer' onclick='openModal(${day}, ${month}, ${year})'>${day}</div>`;
             }
         }
     }
 
-    // Automatically set the calendar to the current month
     let today = new Date();
     let currentYear = today.getFullYear();
     let currentMonth = today.getMonth();
@@ -447,6 +748,106 @@
             currentMonth++;
         }
         generateCalendar(currentYear, currentMonth);
+    });
+
+    function openModal(day, month, year) {
+        const formattedMonth = String(month + 1).padStart(2, '0'); // month + 1 because months are 0-based
+        const formattedDay = String(day).padStart(2, '0'); // pad day to two digits if needed
+        document.getElementById("calendar-date").value = `${year}-${formattedMonth}-${formattedDay}`;
+        document.getElementById("start-date").value = `${year}-${formattedMonth}-${formattedDay}`;
+        document.getElementById("calendarModal").classList.remove("hidden");
+    }
+
+    document.getElementById("closeCalendarModal").addEventListener("click", () => {
+        document.getElementById("calendarModal").classList.add("hidden");
+
+        document.getElementById("singleDayForm").reset();
+        document.getElementById("dateRangeForm").reset();
+    });
+
+    document.getElementById("calendarModal").addEventListener("click", (e) => {
+        if (e.target === document.getElementById("calendarModal")) {
+            document.getElementById("calendarModal").classList.add("hidden");
+
+            document.getElementById("singleDayForm").reset();
+            document.getElementById("dateRangeForm").reset();
+        }
+    });
+
+    function toggleForm(formType) {
+        // Hide both forms initially
+        document.getElementById('singleDayForm').classList.add('hidden');
+        document.getElementById('dateRangeForm').classList.add('hidden');
+
+        // Show the selected form
+        if (formType === 'singleDay') {
+            document.getElementById('singleDayForm').classList.remove('hidden');
+        } else if (formType === 'dateRange') {
+            document.getElementById('dateRangeForm').classList.remove('hidden');
+        }
+    }
+
+    // Ensure single day form is visible by default
+    window.onload = function() {
+        toggleForm('singleDay');
+    };
+
+    // Single Day
+    const singleAllCheckbox = document.getElementById('s-select-all');
+    const singleCheckboxes = document.querySelectorAll('.s-time-checkbox');
+
+    singleAllCheckbox.addEventListener('change', (event) => {
+        // Toggle all time checkboxes based on Select All checkbox state
+        singleCheckboxes.forEach(checkbox => {
+            checkbox.checked = event.target.checked;
+        });
+    });
+
+    singleCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            const singleAllChecked = [...singleCheckboxes].every(checkbox => checkbox.checked);
+            singleAllCheckbox.checked = singleAllChecked;
+        });
+    });
+
+    // Date Range
+    const rangeAllCheckbox = document.getElementById('r-select-all');
+    const rangeCheckboxes = document.querySelectorAll('.r-time-checkbox');
+
+    rangeAllCheckbox.addEventListener('change', (event) => {
+        // Toggle all time checkboxes based on Select All checkbox state
+        rangeCheckboxes.forEach(checkbox => {
+            checkbox.checked = event.target.checked;
+        });
+    });
+
+    rangeCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            const rangeAllChecked = [...rangeCheckboxes].every(checkbox => checkbox.checked);
+            rangeAllCheckbox.checked = rangeAllChecked;
+        });
+    });
+
+    // Function to validate the date range
+    function validateDateRange() {
+        const startDate = document.getElementById("start-date").value;
+        const endDate = document.getElementById("end-date").value;
+
+        // Check if the end date is earlier than the start date
+        if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'End date cannot be before the start date.',
+            });
+            document.getElementById("end-date").value = "";
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
+    }
+
+    // Add event listener to the end date input field
+    document.getElementById("end-date").addEventListener("change", function() {
+        validateDateRange();
     });
 </script>
     

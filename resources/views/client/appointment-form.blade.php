@@ -275,7 +275,6 @@
                     title: 'Success!',
                     text: data.message,
                 }).then(() => {
-                    // location.reload();
                     window.location.href = "{{ route('agents') }}";
                 });
             } else {
