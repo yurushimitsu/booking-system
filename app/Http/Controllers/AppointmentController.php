@@ -75,7 +75,7 @@ class AppointmentController extends Controller
                 $mail->Host       = 'smtp.gmail.com';                        // Set the SMTP server to send through
                 $mail->SMTPAuth   = true;                                    // Enable SMTP authentication
                 $mail->Username   = '';            // SMTP username (your Gmail email address)
-                $mail->Password   = 'iljn xzhb upkw rkgo';                   // SMTP password (your Gmail password or App password)
+                $mail->Password   = '';                   // SMTP password (your Gmail password or App password)
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;             // Enable implicit TLS encryption
                 $mail->Port       = 465;                                     // TCP port to connect to
     
