@@ -26,7 +26,7 @@
         </div>
         <div class="flex justify-center">
             <div class="text-xl font-medium">
-                Name
+                {{ $agent->agent_name }}
             </div>
         </div>
         <div class="flex justify-center mb-5">
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="flex justify-center mb-3">
-            <button type="button" class="text-[#3B82F6] bg-transparent border hover:bg-blue-800  focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-full text-xs px-6 py-1 text-center">Logout</button>
+            <a href="{{ route('logout') }}" class="text-[#3B82F6] bg-transparent border hover:bg-blue-800  focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-full text-xs px-6 py-1 text-center">Logout</a>
         </div>
 
         <ul class="space-y-2 font-medium">
@@ -649,9 +649,9 @@
                                 timeslotBody.innerHTML = `
                                     <div class="grid grid-cols-2">
                                         <div>Name:</div>
-                                        <div class="break-words">${appointment.client_name}</div>
+                                        <div class="break-words">${appointment.name}</div>
                                         <div>Email:</div>
-                                        <div class="break-words">${appointment.client_email}</div>
+                                        <div class="break-words">${appointment.email}</div>
                                         <div>Purpose:</div>
                                         <div class="break-words">${appointment.appointment_type}</div>
                                         <div>Status:</div>
@@ -672,7 +672,7 @@
                                 timeslotBody.innerHTML = `
                                     <div class="grid grid-cols-2">
                                         <div>Purpose:</div>
-                                        <div class="break-words">${appointment.client_notes}</div>
+                                        <div class="break-words">${appointment.notes}</div>
                                     </div>
                                 `;
                             } else {

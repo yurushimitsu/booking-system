@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('agents', function (Blueprint $table) {
+        Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('account_no')->unique();
-            $table->string('agent_name');
-            $table->string('agent_email');
-            $table->string('country');
+            $table->unsignedInteger('client_id');
+            $table->foreign('client_id')->references('account_no')->on('accounts');
+            $table->string('client_name');
+            $table->string('client_email');
+            $table->foreign('client_email')->references('account_email')->on('accounts');
+            $table->string('client_contact');
             $table->string('profile_picture');
             $table->timestamp('created_at')->useCurrent();
         });
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('agents');
+        Schema::dropIfExists('clients');
     }
 };

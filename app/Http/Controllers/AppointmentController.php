@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Agent;
 use App\Models\Appointment;
+use App\Models\Client;
 use Illuminate\Http\Request;
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -14,8 +15,8 @@ class AppointmentController extends Controller
 {
     public function getAgentToForm(Request $request) {
         $agent_no = $request->query('agent');
-        $row = Agent::select('account_no', 'agent_name', 'agent_email', 'profile_picture')
-                            ->where('account_no', $agent_no)
+        $row = Agent::select('agent_id', 'agent_name', 'agent_email', 'profile_picture')
+                            ->where('agent_id', $agent_no)
                             ->first();
         if ($row) {
             return view('client.appointment-form', compact('row', 'agent_no'));
@@ -30,7 +31,7 @@ class AppointmentController extends Controller
         $agentAccountNo = $request->agent_account_no;
         
         $appointments = Appointment::whereDate('appointment_date', $date)
-                               ->where('agent_no', $agentAccountNo)
+                               ->where('agent_id', $agentAccountNo)
                                ->pluck('appointment_time');
 
         return response()->json($appointments);
@@ -49,18 +50,18 @@ class AppointmentController extends Controller
 
         $formalDate = date('F j, Y', strtotime($appointment_date)); // Date to be send in email
         $formalTime = date('g:i A', strtotime($appointment_time));  // Time to send in email
-        $agentName = Agent::select('agent_name')->where('account_no', $agent_no)->first(); // Agent name to send in email
+        $agentName = Agent::select('agent_name')->where('agent_id', $agent_no)->first(); // Agent name to send in email
         $todayDate = date('F j, Y');
 
         $data = [
-            'agent_no' => $agent_no,
+            'agent_id' => $agent_no,
             'appointment_type' => $appointment_type,
             'appointment_date' => $appointment_date,
             'appointment_time' => $appointment_time,
-            'client_name' => $client_name,
-            'client_email' => $client_email,
-            'client_contact' => $client_contact,
-            'client_notes' => $client_notes,
+            'name' => $client_name,
+            'email' => $client_email,
+            'contact' => $client_contact,
+            'notes' => $client_notes,
             'status' => 'pending'
         ];
     

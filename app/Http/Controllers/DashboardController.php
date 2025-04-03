@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class DashboardController extends Controller
 {
     public function getAllAgents() {
-        $allAgents = Agent::select('account_no', 'agent_name', 'country', 'profile_picture')->get(); 
+        $allAgents = Agent::select('agent_id', 'agent_name', 'country', 'profile_picture')->get(); 
         
         return view('client.agents', compact('allAgents'));
     }

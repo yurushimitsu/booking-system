@@ -59,12 +59,10 @@
                                     <option class="text-gray-900" value="Others">Others</option>
                                 </select>
                             </div>
-                            {{-- <div class="relative"> --}}
-                                <div class="flex justify-end gap-2 absolute bottom-10 right-10">
-                                    <a href="{{ route('agents') }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-25 py-2.5 text-center">Cancel</a>
-                                    <button id="next-button" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-25 py-2.5 text-center">Next</button>
-                                </div>
-                            {{-- </div> --}}
+                            <div class="flex justify-end gap-2 absolute bottom-10 right-10">
+                                <a href="{{ route('agents') }}" class="text-blue-700 bg-transparent hover:bg-gray-200 border border-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-25 py-2.5 text-center">Cancel</a>
+                                <button id="next-button" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-25 py-2.5 text-center">Next</button>
+                            </div>
                         </div>
 
                         {{-- Second Form --}}

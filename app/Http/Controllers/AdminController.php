@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Agent;
 use App\Models\Appointment;
 use Carbon\Carbon;
 
@@ -8,12 +10,24 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+
+    public function adminDashboard () {
+        $agent = Agent::where('agent_id', session('agent_id'))->first();
+
+        // if ($agent) {
+            return view('admin.admin', compact('agent'));
+        // } else {
+        //     return redirect()->route('custom.fallback');
+        // }
+    }
+
     public function getAppointments(Request $request) {
         $weekOffset = $request->query('week', 0);
         $startOfWeek = Carbon::now()->startOfWeek()->addWeeks($weekOffset);
         $endOfWeek = $startOfWeek->copy()->addDays(6);
 
-        $appointments = Appointment::whereBetween('appointment_date', [$startOfWeek, $endOfWeek])->get();
+        $appointments = Appointment::whereBetween('appointment_date', [$startOfWeek, $endOfWeek])
+                                    ->where('agent_id', session('agent_id'))->get();
         
         return response()->json($appointments);
     }
@@ -46,6 +60,7 @@ class AdminController extends Controller
         foreach ($times as $time) {
             $existingAppointment = Appointment::where('appointment_date', $date)
                                             ->where('appointment_time', $time)
+                                            ->where('agent_id', session('agent_id'))
                                             ->first();
 
             if ($existingAppointment) {
@@ -62,16 +77,18 @@ class AdminController extends Controller
                 continue;
             } 
 
+            $agent = Agent::where('agent_id', session('agent_id'))->first();
+
             $data = [
-                'agent_no' => '20251001',
+                'agent_id' => $agent->agent_id,
                 'appointment_date' => $date,
                 'appointment_time' => $time,
-                'client_notes' => $reason,
+                'notes' => $reason,
 
                 'appointment_type' => 'Blocked',
-                'client_name' => 'Jeddy Manalili',
-                'client_email' => 'test@gmail.com',
-                'client_contact' => '09123456787',
+                'name' => $agent->agent_name,
+                'email' => $agent->agent_email,
+                'contact' => '09123456787',
                 'status' => 'blocked'
             ];
 
@@ -118,6 +135,7 @@ class AdminController extends Controller
             foreach ($times as $time) {
                 $existingAppointment = Appointment::where('appointment_date', $currentDate->toDateString())
                                                 ->where('appointment_time', $time)
+                                                ->where('agent_id', session('agent_id'))
                                                 ->first();
 
                 if ($existingAppointment) {
@@ -133,16 +151,18 @@ class AdminController extends Controller
                     continue;
                 } 
 
+                $agent = Agent::where('agent_id', session('agent_id'))->first();
+
                 $data = [
-                    'agent_no' => '20251001',
+                    'agent_id' => $agent->agent_id,
                     'appointment_date' => $currentDate->toDateString(),
                     'appointment_time' => $time,
-                    'client_notes' => $reason,
+                    'notes' => $reason,
 
                     'appointment_type' => 'Blocked',
-                    'client_name' => 'Jeddy Manalili',
-                    'client_email' => 'test@gmail.com',
-                    'client_contact' => '09123456787',
+                    'name' => $agent->agent_name,
+                    'email' => $agent->agent_email,
+                    'contact' => '09123456787',
                     'status' => 'blocked'
                 ];
 
