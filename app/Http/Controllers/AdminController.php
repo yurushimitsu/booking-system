@@ -156,4 +156,17 @@ class AdminController extends Controller
     
         return response()->json(['success' => true, 'message' => $message]);
     }
+
+    public function deleteBlockedSlot($id) {
+        $appointment = Appointment::findOrFail($id);
+
+        $formalDate = Carbon::parse($appointment->appointment_date)->format('F j, Y');
+        $formalTime = Carbon::parse($appointment->appointment_time)->format('g:i A');
+
+        if ($appointment->status === 'blocked') {
+            $appointment->delete();
+            return response()->json(['success' => true, 'message' => $formalDate.' on '.$formalTime.' is now open for appointments']);
+        }
+        return response()->json(['success' => false, 'message' => 'Error']);
+    }
 }

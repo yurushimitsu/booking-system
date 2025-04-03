@@ -45,9 +45,11 @@ Route::prefix('admin')->group(function () {
     Route::get('/', function () {
         return view('admin.admin');
     })->name('admin');
+
     Route::get('/appointments', [AdminController::class, 'getAppointments']);
     Route::post('/single-block', [AdminController::class, 'singleDayBlock'])->name('singleDayBlock');
     Route::post('/range-block', [AdminController::class, 'rangeBlock'])->name('rangeBlock');
+    Route::delete('/delete/{id}', [AdminController::class, 'deleteBlockedSlot'])->name('deleteBlockedSlot');
 });
 
 Route::get('/admin/{agent}', [CalendarController::class, 'getAgentAdmin'])->where('agent', '[0-9]+')->name('adminCalendar');

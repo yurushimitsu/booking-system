@@ -181,7 +181,7 @@
                         <div class="bg-white p-6 rounded-lg shadow-lg w-120">
                             <div class="flex items-center justify-between pb-3">
                                 <h2 id="calendarTitle" class="text-2xl font-bold">Block your schedule</h2>
-                                <button id="closeCalendarModal" type="button" class="text-gray-400 bg-transparent cursor-pointer hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="default-modal">
+                                <button id="closeCalendarModal" type="button" class="text-gray-400 bg-transparent cursor-pointer hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
                                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                                     </svg>
@@ -412,13 +412,28 @@
 
                     {{-- Timeslot Modal --}}
                     <div id="timeslotModal" class="fixed z-60 inset-0 flex items-center justify-center hidden">
-                        <div class="bg-white p-6 rounded-lg shadow-lg w-100">           
+                        <div class="bg-white p-6 rounded-3xl shadow-lg w-100">           
                             <div id="timeslotHeader" class="flex items-center justify-between pb-3">
                                 <h2 id="timeslotDate" class="text-lg font-bold"></h2>
                                 <div id="buttons" class="flex flex-row gap-1">
-                                    <div id="timeslotOtherButtons"></div>
+                                    <div id="headerDeleteButton" class="hidden">
+                                        <button id="deleteBlockedSlotButton" class="text-white bg-red-600 cursor-pointer hover:bg-red-800 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                            </svg>
+                                            <span class="sr-only">Delete blocked timeslot</span>
+                                        </button>
+                                    </div>
+                                    <div id="headerEditButton" class="hidden">
+                                        <button id="editTimeslotButton" class="text-white bg-[#06064E] cursor-pointer hover:bg-blue-800 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                                            </svg>                                              
+                                            <span class="sr-only">Edit timeslot</span>
+                                        </button>
+                                    </div>
                                     <div>
-                                        <button id="closeTimeslotModal" type="button" class="text-gray-400 bg-transparent cursor-pointer hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="default-modal">
+                                        <button id="closeTimeslotModal" type="button" class="text-gray-400 bg-transparent cursor-pointer hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                                             </svg>
@@ -430,6 +445,22 @@
                             <div id="timeslotTitle"></div>
                             <div id="timeslotBody" class="p-3"></div>
                         </div>
+                    </div>
+
+                    <!-- Delete Confirmation Modal -->
+                    <div id="deleteConfirmationModal" class="fixed z-70 inset-0 flex items-center justify-center hidden">
+                        <form id="deleteBlockedSlotForm" class="hidden" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <div class="bg-white p-6 rounded-3xl shadow-lg w-100">
+                                <h2 class="text-lg font-bold mb-4">Delete Blocked Schedule</h2>
+                                <p class="mb-4">Are you sure you want to delete this blocked schedule?</p>
+                                <div class="flex justify-center gap-5">
+                                    <button id="cancelDelete" type="button" class="w-30 bg-white border border-[#06064E] hover:bg-gray-100 cursor-pointer text-gray-900 text-gray-800 px-4 py-2 rounded-full">NO</button>
+                                    <button id="confirmDelete" type="submit" class="w-30 bg-[#06064E] hover:bg-blue-800 cursor-pointer text-white px-4 py-2 rounded-full">YES</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -532,10 +563,13 @@
         // Modal elements
         const timeslotModal = document.getElementById("timeslotModal");
         const timeslotTitle = document.getElementById("timeslotTitle");
-        const timeslotOtherButtons = document.getElementById("timeslotOtherButtons");
         const timeslotDate = document.getElementById("timeslotDate");
         const timeslotBody = document.getElementById("timeslotBody");
         const closeTimeslotModal = document.getElementById("closeTimeslotModal");
+
+        const headerDeleteButton = document.getElementById("headerDeleteButton");
+        const headerEditButton = document.getElementById("headerEditButton");
+        const editTimeslotButton = document.getElementById("editTimeslotButton");
 
         function fetchAppointments(offset) {
             currentWeekOffset = offset;
@@ -622,14 +656,9 @@
                                 `;
                             } else if (appointment.status === "blocked") {
                                 timeslotDate.textContent = `${readableDate}`;
-                                timeslotOtherButtons.innerHTML = `
-                                        <button id="deleteBlockedSlot" type="button" class="text-white bg-red-600 cursor-pointer hover:bg-red-800 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="default-modal">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                            </svg>
-                                            <span class="sr-only">Delete blocked timeslot</span>
-                                        </button>
-                                `;
+                                headerDeleteButton.classList.remove("hidden");
+                                deleteBlockedSlotForm.action = `/admin/delete/${appointment.id}`;
+                                
                                 timeslotTitle.innerHTML = `
                                     <div class="flex flex-row justify-between w-full p-2 rounded-lg mt-2 text-center font-semibold border border-red-600 text-red-600">
                                         <div>Blocked</div>
@@ -644,6 +673,7 @@
                                 `;
                             } else {
                                 timeslotDate.textContent = `${readableDate}`;
+                                headerEditButton.classList.remove("hidden");
                                 timeslotTitle.innerHTML = `
                                     <div class="flex flex-row justify-between w-full p-2 rounded-lg mt-2 text-center font-semibold border border-green-500 text-green-500">
                                         <div>Available</div>
@@ -653,6 +683,7 @@
                             }
                         } else {
                             timeslotDate.textContent = `${readableDate}`;
+                            headerEditButton.classList.remove("hidden");
                             timeslotTitle.innerHTML = `
                                 <div class="flex flex-row justify-between w-full p-2 rounded-lg mt-2 text-center font-semibold border border-green-500 text-green-500">
                                     <div>Available</div>
@@ -672,22 +703,89 @@
             }
         }
 
+        const deleteBlockedSlotButton = document.getElementById("deleteBlockedSlotButton");
+        const deleteConfirmationModal = document.getElementById("deleteConfirmationModal");
+        const deleteBlockedSlotForm = document.getElementById("deleteBlockedSlotForm");
+        const cancelDelete = document.getElementById("cancelDelete");
+
+        deleteBlockedSlotButton.addEventListener("click", function () {
+            deleteConfirmationModal.classList.remove("hidden");
+            deleteBlockedSlotForm.classList.remove("hidden");
+        });
+
+        cancelDelete.addEventListener("click", function () {
+            deleteConfirmationModal.classList.add("hidden");
+            deleteBlockedSlotForm.classList.add("hidden"); 
+        });
+
+        // Close modal when clicking outside
+        deleteConfirmationModal.addEventListener("click", function (event) {
+            if (event.target === deleteConfirmationModal) {
+                deleteConfirmationModal.classList.add("hidden");
+                deleteBlockedSlotForm.classList.add("hidden"); 
+            }
+        });
+
         // Close modal when button is clicked
         closeTimeslotModal.addEventListener("click", () => {
             timeslotModal.classList.add("hidden");
+            headerDeleteButton.classList.add("hidden");
+            // deleteBlockedSlot.classList.add("hidden");
         });
 
         // Close modal when clicking outside
         timeslotModal.addEventListener("click", (e) => {
             if (e.target === timeslotModal) {
                 timeslotModal.classList.add("hidden");
+                headerDeleteButton.classList.add("hidden");
+                // deleteBlockedSlot.classList.add("hidden");
             }
         });
 
         document.getElementById("prevWeek").addEventListener("click", () => fetchAppointments(currentWeekOffset - 1));
         document.getElementById("nextWeek").addEventListener("click", () => fetchAppointments(currentWeekOffset + 1));
 
-        fetchAppointments(0); // Load current week on page load
+        fetchAppointments(0);
+    });
+
+    document.getElementById('deleteBlockedSlotForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+
+        fetch(form.getAttribute('action'), {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted Blocked Schedule',
+                    text: data.message,
+                }).then(() => {
+                    window.location.reload();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: data.message,
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+            });
+        });
     });
 
     // Side Calendar
