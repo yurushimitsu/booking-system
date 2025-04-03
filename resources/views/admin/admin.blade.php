@@ -177,7 +177,7 @@
                     </div>
 
                     {{-- Calendar Modal --}}
-                    <div id="calendarModal" class="fixed z-60 inset-0 flex items-center justify-center hidden">
+                    <div id="calendarModal" class="fixed z-80 inset-0 flex items-center justify-center hidden">
                         <div class="bg-white p-6 rounded-lg shadow-lg w-120">
                             <div class="flex items-center justify-between pb-3">
                                 <h2 id="calendarTitle" class="text-2xl font-bold">Block your schedule</h2>
@@ -597,6 +597,10 @@
                 let currentDate = new Date(startOfWeek);
                 currentDate.setDate(currentDate.getDate() + i);
                 let formattedDate = currentDate.toISOString().split("T")[0];
+                let [year, month, day] = formattedDate.split("-");
+                let yearNum = Number(year);
+                let monthNum = Number(month) - 1;
+                let dayNum = Number(day);
                 let readableDate = new Date(formattedDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
                 let dayColumn = document.createElement("div");
@@ -684,6 +688,8 @@
                         } else {
                             timeslotDate.textContent = `${readableDate}`;
                             headerEditButton.classList.remove("hidden");
+                            headerEditButton.onclick = () => openModal(dayNum, monthNum, yearNum);
+                            console.log(dayNum, monthNum, yearNum);
                             timeslotTitle.innerHTML = `
                                 <div class="flex flex-row justify-between w-full p-2 rounded-lg mt-2 text-center font-semibold border border-green-500 text-green-500">
                                     <div>Available</div>
@@ -715,7 +721,7 @@
 
         cancelDelete.addEventListener("click", function () {
             deleteConfirmationModal.classList.add("hidden");
-            deleteBlockedSlotForm.classList.add("hidden"); 
+            deleteBlockedSlotForm.classList.add("hidden");
         });
 
         // Close modal when clicking outside
@@ -730,7 +736,7 @@
         closeTimeslotModal.addEventListener("click", () => {
             timeslotModal.classList.add("hidden");
             headerDeleteButton.classList.add("hidden");
-            // deleteBlockedSlot.classList.add("hidden");
+            headerEditButton.classList.add("hidden");
         });
 
         // Close modal when clicking outside
@@ -738,7 +744,7 @@
             if (e.target === timeslotModal) {
                 timeslotModal.classList.add("hidden");
                 headerDeleteButton.classList.add("hidden");
-                // deleteBlockedSlot.classList.add("hidden");
+                headerEditButton.classList.add("hidden");
             }
         });
 
