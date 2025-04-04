@@ -11,4 +11,9 @@ class Appointment extends Model
 
     public $timestamps = false;
     protected $guarded = [];
+
+    public function agent()
+    {
+        return $this->belongsTo(Agent::class);
+    }
 }

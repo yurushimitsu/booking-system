@@ -7,6 +7,7 @@ use App\Models\Appointment;
 use Carbon\Carbon;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -25,9 +26,13 @@ class AdminController extends Controller
         $weekOffset = $request->query('week', 0);
         $startOfWeek = Carbon::now()->startOfWeek()->addWeeks($weekOffset);
         $endOfWeek = $startOfWeek->copy()->addDays(6);
-
-        $appointments = Appointment::whereBetween('appointment_date', [$startOfWeek, $endOfWeek])
-                                    ->where('agent_id', session('agent_id'))->get();
+        
+        $appointments = DB::table('agents')
+                            ->join('appointments', 'agents.agent_id', '=', 'appointments.agent_id')
+                            ->whereBetween('appointments.appointment_date', [$startOfWeek, $endOfWeek])
+                            ->where('appointments.agent_id', session('agent_id'))
+                            ->select('agents.meeting_link', 'appointments.*')
+                            ->get();
         
         return response()->json($appointments);
     }

@@ -12,7 +12,8 @@ class Agent extends Model
     public $timestamps = false;
     protected $guarded = [];
 
-    public function agent() {
-        return $this->hasMany(Agent::class, 'agent_no');
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
     }
 }

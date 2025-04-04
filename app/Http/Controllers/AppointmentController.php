@@ -6,7 +6,7 @@ use App\Models\Agent;
 use App\Models\Appointment;
 use App\Models\Client;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -15,13 +15,15 @@ class AppointmentController extends Controller
 {
 
     public function pendingAppointments() {
-        $pendingAppointments = Appointment::where('status', 'pending')->where('agent_id', session('agent_id'))->get();
-        // dd($pendingAppointments);
-        $meetingLink = Agent::where('agent_id', session('agent_id'))->pluck('meeting_link')->first();
-        return response()->json([
-            'data' => $pendingAppointments,
-            'meetingLink' => $meetingLink
-        ]);
+
+        $pendingAppointments = DB::table('agents')
+                            ->join('appointments', 'agents.agent_id', '=', 'appointments.agent_id')
+                            ->where('appointments.status', 'pending')
+                            ->where('appointments.agent_id', session('agent_id'))
+                            ->select('agents.meeting_link', 'appointments.*')
+                            ->get();
+
+        return response()->json($pendingAppointments);
     }
 
     public function approveAppointment(Request $request) {
@@ -73,7 +75,7 @@ class AppointmentController extends Controller
         
         $appointments = Appointment::whereDate('appointment_date', $date)
                                ->where('agent_id', $agentAccountNo)
-                               ->whereNotIn('status', ['accepted', 'rejected'])
+                               ->whereNotIn('status', ['rejected'])
                                ->pluck('appointment_time');
 
         return response()->json($appointments);
