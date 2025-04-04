@@ -13,6 +13,47 @@ use PHPMailer\PHPMailer\Exception;
 
 class AppointmentController extends Controller
 {
+
+    public function pendingAppointments() {
+        $pendingAppointments = Appointment::where('status', 'pending')->where('agent_id', session('agent_id'))->get();
+        // dd($pendingAppointments);
+        $meetingLink = Agent::where('agent_id', session('agent_id'))->pluck('meeting_link')->first();
+        return response()->json([
+            'data' => $pendingAppointments,
+            'meetingLink' => $meetingLink
+        ]);
+    }
+
+    public function approveAppointment(Request $request) {
+        $appointmentId = $request->input('appointmentId');
+
+        $appointment = Appointment::find($appointmentId);
+        if ($appointment) {
+            $appointment->status = 'accepted';
+            $appointment->save();
+    
+            return response()->json(['success' => true, 'message' => 'Appointment approved']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Appointment not found']);
+        }
+    }
+
+    public function rejectAppointment(Request $request) {
+        $appointmentId = $request->input('appointmentId');
+        $reason = $request->input('reason');
+
+        $appointment = Appointment::find($appointmentId);
+        if ($appointment) {
+            $appointment->status = 'rejected';
+            $appointment->notes = $reason;
+            $appointment->save();
+    
+            return response()->json(['success' => true, 'message' => 'Appointment rejected']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Appointment not found']);
+        }
+    }
+
     public function getAgentToForm(Request $request) {
         $agent_no = $request->query('agent');
         $row = Agent::select('agent_id', 'agent_name', 'agent_email', 'profile_picture')
@@ -32,6 +73,7 @@ class AppointmentController extends Controller
         
         $appointments = Appointment::whereDate('appointment_date', $date)
                                ->where('agent_id', $agentAccountNo)
+                               ->whereNotIn('status', ['accepted', 'rejected'])
                                ->pluck('appointment_time');
 
         return response()->json($appointments);

@@ -8,7 +8,11 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    public function login() {
+    public function login(Request $request) {
+        if (Session::has('agent_id')) {
+
+            return redirect()->route('adminDashboard');
+        }
         return view('login');
     }
 

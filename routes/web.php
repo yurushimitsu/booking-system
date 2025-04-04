@@ -52,24 +52,15 @@ Route::middleware(['guest'])->prefix('login')->group(function () {
 });
 
 Route::middleware(['custom.auth'])->prefix('admin')->group(function () {
-    // Route::get('/all', [DashboardController::class, 'getAllAgents'])->name('agents');
-    // Route::get('/search', [DashboardController::class, 'searchAgent'])->name('searchAgent');
-    // Route::get('/countries', [DashboardController::class, 'getCountries'])->name('getCountries');
-    // Route::get('/agents/search-by-country', [DashboardController::class, 'searchAgentByCountry'])->name('searchAgentByCountry');
-
-
-    // Route::get('/form', [AppointmentController::class, 'getAgentToForm'])->where('agent', '[0-9]+');
-    // Route::post('/form', [AppointmentController::class, 'postAppointmentRequest'])->where('agent', '[0-9]+')->name('postAppointmentRequest');
-    // Route::get('/getAppointmentsForDate', [AppointmentController::class, 'getAppointmentsForDate']);
-
-    // Route::get('/', function () {
-    //     return view('admin.admin');
-    // })->name('admin');
     Route::get('/', [AdminController::class, 'adminDashboard'])->name('adminDashboard');
     Route::get('/appointments', [AdminController::class, 'getAppointments']);
     Route::post('/single-block', [AdminController::class, 'singleDayBlock'])->name('singleDayBlock');
     Route::post('/range-block', [AdminController::class, 'rangeBlock'])->name('rangeBlock');
     Route::delete('/delete/{id}', [AdminController::class, 'deleteBlockedSlot'])->name('deleteBlockedSlot');
+
+    Route::get('/pending-appointments', [AppointmentController::class, 'pendingAppointments'])->name('pendingAppointments');
+    Route::post('/approve-appointment', [AppointmentController::class, 'approveAppointment'])->name('approveAppointment');
+    Route::post('/reject-appointment', [AppointmentController::class, 'rejectAppointment'])->name('rejectAppointment');
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 });

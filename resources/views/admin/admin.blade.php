@@ -121,9 +121,9 @@
                     </a>
                 </div>
                 <div class="">
-                    <table id="example" class="display">
-                        <thead>
-                            <tr>
+                    <table id="pendingAppointmentsTable" class="display whitespace-nowrap">
+                        <thead class="bg-[#E2DFFF] text-sm">
+                            <tr class="text-sm">
                                 <th>Client Name</th>
                                 <th>Date and Time</th>
                                 <th>Email</th>
@@ -132,17 +132,58 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>Sample 1</td>
-                                <td>Sample 2</td>
-                                <td>Sample 3</td>
-                                <td>Sample 4</td>
-                                <td>Sample 5</td>
-                                <td>Sample 6</td>
-                            </tr>
+                        <tbody class="text-sm">
                         </tbody>
                     </table>
+                    <!-- Accept Appointment Modal -->
+                    <div id="acceptAppointentModal" class="fixed z-60 inset-0 flex items-center justify-center hidden">
+                        <form id="acceptAppointmentModalForm" method="POST" action="{{ route('approveAppointment') }}">
+                            @csrf
+                            <div class="bg-white p-6 rounded-3xl shadow-lg w-100">
+                                <div id="acceptModalHeader" class="flex items-center justify-between pb-3">
+                                    <h2 class="text-lg font-bold">Approve Booking</h2>
+                                    <div>
+                                        <button id="closeAcceptAppointmentModal" type="button" class="text-gray-400 bg-transparent cursor-pointer hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                            </svg>
+                                            <span class="sr-only">Close modal</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="modalAcceptFormContent" class="pb-3"></div>
+                                <div class="flex justify-end gap-3">
+                                    <button id="cancelAcceptAppointmentModal" type="button" class="w-30 bg-white border border-[#06064E] hover:bg-gray-100 cursor-pointer text-[#06064E] font-medium  px-4 py-2 rounded-full">CANCEL</button>
+                                    <button id="approveAppointmentModal" type="submit" class="w-30 bg-green-600 hover:bg-green-800 cursor-pointer text-white font-medium px-4 py-2 rounded-full">APPROVE</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Reject Appointment Modal -->
+                    <div id="rejectAppointentModal" class="fixed z-60 inset-0 flex items-center justify-center hidden">
+                        <form id="appointmentModalForm" method="POST" action="{{ route('rejectAppointment') }}">
+                            @csrf
+                            <div class="bg-white p-6 rounded-3xl shadow-lg w-100">
+                                <div id="acceptModalHeader" class="flex items-center justify-between pb-3">
+                                    <h2 class="text-lg font-bold">Reject Booking</h2>
+                                    <div>
+                                        <button id="closeAppointmentModal" type="button" class="text-gray-400 bg-transparent cursor-pointer hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                            </svg>
+                                            <span class="sr-only">Close modal</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="modalRejectFormContent" class="pb-3"></div>
+                                <div class="flex justify-end gap-3">
+                                    <button id="cancelRejectAppointmentModal" type="button" class="w-30 bg-white border border-[#06064E] hover:bg-gray-100 cursor-pointer text-[#06064E] font-medium  px-4 py-2 rounded-full">CANCEL</button>
+                                    <button id="approveAppointmentModal" type="submit" class="w-30 bg-green-600 hover:bg-green-800 cursor-pointer text-white font-medium px-4 py-2 rounded-full">APPROVE</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -472,7 +513,199 @@
 
 <script>    
     $(document).ready(function() {
-        $('#example').DataTable();
+        $('#pendingAppointmentsTable').DataTable({
+            processing: true,
+            serverSide: false,
+            scrollX: true,
+            ajax: {
+                url: '{{ route("pendingAppointments") }}',
+                dataSrc: function (json) {
+                    const meetingLink = json.meetingLink;
+
+                    // Inject the meetingLink into each row of the data
+                    json.data.forEach(row => {
+                        row.meeting_link = meetingLink;  // Add meeting_link to each row
+                    });
+
+                    console.log(json.data);  // Check the structure of the data in the console
+                    return json.data;
+                }
+            },
+            
+            columns: [
+                { data: 'name' },
+                { 
+                    data: null,
+                    render: function(data, type, row) {
+                        // Format date (YYYY-MM-DD to DD-MM-YY)
+                        let date = new Date(row.appointment_date);
+                        let formattedDate = date.toLocaleDateString('en-GB', { 
+                            day: '2-digit', month: '2-digit', year: '2-digit' 
+                        });
+
+                        // Format time (24-hour to 12-hour AM/PM)
+                        let time = row.appointment_time;
+                        let [hour, minute] = time.split(':');
+                        let ampm = hour >= 12 ? 'PM' : 'AM';
+                        hour = hour % 12 || 12; // Convert 24-hour to 12-hour format
+                        let formattedTime = `${hour}:${minute} ${ampm}`;
+
+                        return `${formattedDate} ${formattedTime}`;
+                    }
+                },
+                { data: 'email' },
+                { data: 'contact' },
+                { data: 'appointment_type' },
+                {
+                    data: null,
+                    render: function(data, type, row) {
+                        console.log(row.meeting_link);
+                        return `
+                            <button id="acceptPendingModal" class="rounded-full bg-green-300 cursor-pointer p-0.5" data-id="${row.id}" data-link="${row.meeting_link}">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                            </button>
+                            <button id="rejectPendingModal" class="rounded-full bg-red-300 cursor-pointer p-0.5" data-id="${row.id}">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                            </button>
+                        `;
+                    }
+                }
+            ]
+        });
+
+        $(document).on('click', '#acceptPendingModal', function() {
+            // Get data attributes of the clicked button
+            let id = $(this).data('id');
+            let meetingLink = $(this).data('link');
+
+            // Populate the modal with the appointment data
+            $('#modalAcceptFormContent').html(`
+                <input type="hidden" id="appointmentId" name="appointmentId" value="${id}">
+                <input type="text" id="meeting-link" name="meeting-link" value="${meetingLink}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Meeting Link" required />
+            `);
+
+            // Show the modal
+            $('#acceptAppointentModal').removeClass('hidden');
+
+            $('#closeAcceptAppointmentModal, #cancelAcceptAppointmentModal').on('click', function() {
+                $('#acceptAppointentModal').addClass('hidden');
+            });
+        });
+
+        $(document).on('click', function(event) {
+            if ($(event.target).is('#acceptAppointentModal')) {
+                $('#acceptAppointentModal').addClass('hidden');
+            }
+        });
+
+        $(document).on('click', '#rejectPendingModal', function() {
+            // Get data attributes of the clicked button
+            let id = $(this).data('id');
+            let meetingLink = $(this).data('link');
+
+            // Populate the modal with the appointment data
+            $('#modalRejectFormContent').html(`
+                <input type="hidden" id="appointmentId" name="appointmentId" value="${id}">
+                <input type="text" id="reason" name="reason" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Reason" required />
+            `);
+
+            // Show the modal
+            $('#rejectAppointentModal').removeClass('hidden');
+
+            $('#closeAppointmentModal, #cancelRejectAppointmentModal').on('click', function() {
+                $('#rejectAppointentModal').addClass('hidden');
+            });
+        });
+
+        $(document).on('click', function(event) {
+            if ($(event.target).is('#rejectAppointentModal')) {
+                $('#rejectAppointentModal').addClass('hidden');
+            }
+        });
+    });
+
+    document.getElementById('acceptAppointmentModalForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+
+        fetch(form.getAttribute('action'), {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: data.message,
+                }).then(() => {
+                    window.location.reload();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: data.message,
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+            });
+        });
+    });
+
+    document.getElementById('appointmentModalForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+
+        fetch(form.getAttribute('action'), {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Denied',
+                    text: data.message,
+                }).then(() => {
+                    window.location.reload();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: data.message,
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+            });
+        });
     });
 
     document.getElementById('singleDayForm').addEventListener('submit', function(event) {
