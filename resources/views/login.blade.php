@@ -11,7 +11,7 @@
                         Sign in to your account
                     </h1>
                     @if(Session::has('error'))
-                        <div class="" role="alert">
+                        <div class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50" role="alert">
                             {{ Session::get('error') }}
                         </div>
                     @endif

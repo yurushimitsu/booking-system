@@ -13,13 +13,9 @@ class AdminController extends Controller
 {
 
     public function adminDashboard () {
-        $agent = Agent::where('agent_id', session('agent_id'))->first();
+        $agent = Agent::where('agent_id', session('user_id'))->first();
 
-        // if ($agent) {
-            return view('admin.admin', compact('agent'));
-        // } else {
-        //     return redirect()->route('custom.fallback');
-        // }
+        return view('admin.admin', compact('agent'));
     }
 
     public function getAppointments(Request $request) {
@@ -30,7 +26,7 @@ class AdminController extends Controller
         $appointments = DB::table('agents')
                             ->join('appointments', 'agents.agent_id', '=', 'appointments.agent_id')
                             ->whereBetween('appointments.appointment_date', [$startOfWeek, $endOfWeek])
-                            ->where('appointments.agent_id', session('agent_id'))
+                            ->where('appointments.agent_id', session('user_id'))
                             ->select('agents.meeting_link', 'appointments.*')
                             ->get();
         
@@ -65,7 +61,7 @@ class AdminController extends Controller
         foreach ($times as $time) {
             $existingAppointment = Appointment::where('appointment_date', $date)
                                             ->where('appointment_time', $time)
-                                            ->where('agent_id', session('agent_id'))
+                                            ->where('agent_id', session('user_id'))
                                             ->first();
 
             if ($existingAppointment) {
@@ -82,7 +78,7 @@ class AdminController extends Controller
                 continue;
             } 
 
-            $agent = Agent::where('agent_id', session('agent_id'))->first();
+            $agent = Agent::where('agent_id', session('user_id'))->first();
 
             $data = [
                 'agent_id' => $agent->agent_id,
@@ -140,7 +136,7 @@ class AdminController extends Controller
             foreach ($times as $time) {
                 $existingAppointment = Appointment::where('appointment_date', $currentDate->toDateString())
                                                 ->where('appointment_time', $time)
-                                                ->where('agent_id', session('agent_id'))
+                                                ->where('agent_id', session('user_id'))
                                                 ->first();
 
                 if ($existingAppointment) {
@@ -156,7 +152,7 @@ class AdminController extends Controller
                     continue;
                 } 
 
-                $agent = Agent::where('agent_id', session('agent_id'))->first();
+                $agent = Agent::where('agent_id', session('user_id'))->first();
 
                 $data = [
                     'agent_id' => $agent->agent_id,

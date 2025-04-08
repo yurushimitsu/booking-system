@@ -55,7 +55,7 @@
                             <img class="-mt-12 -mx-8 h-90 min-w-50 object-cover" src="{{ asset('agent-pics/'.$row->profile_picture) }}" alt="agent picture" />
                         </div>
                         <h5 class="py-3 text-md font-medium tracking-tight text-gray-900">{{ $row->agent_name }}</h5>
-                        <a href="/appointment/form?agent={{ $row->agent_id }}" class="inline-flex w-full text-center justify-center py-2 text-sm font-medium text-center text-white bg-gradient-to-r from-blue-500 to-blue-900 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                        <a href="/user/form?agent={{ $row->agent_id }}" class="inline-flex w-full text-center justify-center py-2 text-sm font-medium text-center text-white bg-gradient-to-r from-blue-500 to-blue-900 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
                             Book
                         </a>
                     </div>
@@ -91,7 +91,7 @@
                                                 <img class="-mt-12 -mx-8 h-90 min-w-50 object-cover" src="/agent-pics/${agent.profile_picture}" alt="agent picture" />
                                             </div>
                                             <h5 class="py-3 text-md font-medium tracking-tight text-gray-900">${agent.agent_name}</h5>
-                                            <a href="/appointment/form?agent=${agent.agent_id}" class="inline-flex w-full text-center justify-center py-2 text-sm font-medium text-center text-white bg-gradient-to-r from-blue-500 to-blue-900 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                            <a href="/user/form?agent=${agent.agent_id}" class="inline-flex w-full text-center justify-center py-2 text-sm font-medium text-center text-white bg-gradient-to-r from-blue-500 to-blue-900 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
                                                 Book
                                             </a>
                                         </div>
@@ -178,7 +178,7 @@
                                                 <img class="-mt-12 -mx-8 h-90 min-w-50 object-cover" src="/agent-pics/${agent.profile_picture}" alt="agent picture" />
                                             </div>
                                             <h5 class="py-3 text-md font-medium tracking-tight text-gray-900">${agent.agent_name}</h5>
-                                            <a href="/appointment/form?agent=${agent.agent_id}" class="inline-flex w-full text-center justify-center py-2 text-sm font-medium text-center text-white bg-gradient-to-r from-blue-500 to-blue-900 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                            <a href="/user/form?agent=${agent.agent_id}" class="inline-flex w-full text-center justify-center py-2 text-sm font-medium text-center text-white bg-gradient-to-r from-blue-500 to-blue-900 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
                                                 Book
                                             </a>
                                         </div>
@@ -211,7 +211,7 @@
                                                 <img class="-mt-12 -mx-8 h-90 min-w-50 object-cover" src="/agent-pics/${agent.profile_picture}" alt="agent picture" />
                                             </div>
                                             <h5 class="py-3 text-md font-medium tracking-tight text-gray-900">${agent.agent_name}</h5>
-                                            <a href="/appointment/form?agent=${agent.agent_id}" class="inline-flex w-full text-center justify-center py-2 text-sm font-medium text-center text-white bg-gradient-to-r from-blue-500 to-blue-900 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                            <a href="/user/form?agent=${agent.agent_id}" class="inline-flex w-full text-center justify-center py-2 text-sm font-medium text-center text-white bg-gradient-to-r from-blue-500 to-blue-900 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
                                                 Book
                                             </a>
                                         </div>

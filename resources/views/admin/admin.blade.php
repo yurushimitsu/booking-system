@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="flex justify-center mb-3">
-            <a href="{{ route('logout') }}" class="text-[#3B82F6] bg-transparent border hover:bg-blue-800  focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-full text-xs px-6 py-1 text-center">Logout</a>
+            <a href="{{ route('adminLogout') }}" class="text-[#3B82F6] bg-transparent border hover:bg-blue-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-full text-xs px-6 py-1 text-center">Logout</a>
         </div>
 
         <div class="flex justify-between mt-8 mb-4">

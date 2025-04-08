@@ -61,7 +61,7 @@
                             </div>
                             <div class="flex justify-end gap-2 absolute bottom-10 right-10">
                                 <a href="{{ route('agents') }}" class="text-blue-700 bg-transparent hover:bg-gray-200 border border-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-25 py-2.5 text-center">Cancel</a>
-                                <button id="next-button" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-25 py-2.5 text-center">Next</button>
+                                <button id="next-button" type="button" class="text-white bg-blue-700 hover:bg-blue-800 cursor-pointer focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-25 py-2.5 text-center">Next</button>
                             </div>
                         </div>
 
@@ -95,8 +95,8 @@
                                 <textarea name="notes" id="notes" rows="1" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder=""></textarea>
                             </div>
                             <div class="flex justify-end gap-2 absolute bottom-10 right-10">
-                                <button id="back-button" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-25 py-2.5 text-center">Back</a>
-                                <button id="submit-button" type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-25 py-2.5 text-center">
+                                <button id="back-button" type="button" class="text-blue-700 bg-transparent hover:bg-gray-200 cursor-pointer border border-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-25 py-2.5 text-center">Back</a>
+                                <button id="submit-button" type="submit" class="text-white bg-blue-700 hover:bg-blue-800 cursor-pointer focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-25 py-2.5 text-center">
                                     Submit
                                 </button>
                                 <button id="loading-button" disabled type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-25 py-2.5 text-center hidden">
@@ -177,7 +177,7 @@
             }
 
             // Send an AJAX request to get appointments for the selected date
-            fetch(`/appointment/getAppointmentsForDate?date=${selectedDate}&agent_account_no=${agentAccountNo}`)
+            fetch(`/user/getAppointmentsForDate?date=${selectedDate}&agent_account_no=${agentAccountNo}`)
                 .then(response => response.json())
                 .then(data => {
                     let appointmentTimes = data; // Array of appointment times
