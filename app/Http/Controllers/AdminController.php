@@ -28,6 +28,7 @@ class AdminController extends Controller
                             ->whereBetween('appointments.appointment_date', [$startOfWeek, $endOfWeek])
                             ->where('appointments.agent_id', session('user_id'))
                             ->select('agents.meeting_link', 'appointments.*')
+                            ->orderBy('appointments.appointment_date')
                             ->get();
         
         return response()->json($appointments);

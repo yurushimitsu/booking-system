@@ -80,9 +80,11 @@ Route::middleware(['custom.auth', 'role:agent'])->prefix('admin')->group(functio
 Route::middleware(['custom.auth', 'role:client'])->prefix('client')->group(function () {
     Route::get('/my-bookings', [AppointmentController::class, 'myBookings'])->name('myBookings');
     Route::get('/past-bookings', [AppointmentController::class, 'pastBookings'])->name('pastBookings');
+    
+    Route::get('/change-password', [DashboardController::class, 'changePasswordNav'])->name('changePasswordNav');
+    Route::post('/change-password', [DashboardController::class, 'changePassword'])->name('changePassword');
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('clientLogout');
-
 });
 
 Route::prefix('admin')->group(function () {

@@ -30,13 +30,17 @@ class LoginController extends Controller
             $request->session()->put('user_id', $user->account_no);
             $request->session()->put('user_role', $user->role);
 
-
             // Redirect based on the user's role
             switch ($user->role) {
                 case 'agent':
                     return redirect()->route('adminDashboard')->with('success', 'Login Success');
                 case 'client':
-                    return redirect()->route('myBookings')->with('success', 'Login Success');
+                    // return redirect()->route('myBookings')->with('success', 'Login Success');
+                    if (Hash::check('ilovefilglobal', $user->account_password)) {
+                        return redirect('/client/change-password')->with('error', 'Change Your Password First');
+                    } else {
+                        return redirect()->route('myBookings');  // Redirect to user area (agents can be clients too)
+                    }
                 default:
                     return redirect('/login')->with('error', 'Invalid Role');
             }

@@ -9,6 +9,7 @@ use App\Models\Client;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -85,6 +86,86 @@ class AppointmentController extends Controller
     
     // Post appointment request and email
     public function postAppointmentRequest(Request $request) {
+        // $agent_no = htmlspecialchars($request->input('agent_account_no'));
+        // $client_name = htmlspecialchars($request->input('fullname'));
+        // $client_email = htmlspecialchars($request->input('email'));
+        // $client_contact = htmlspecialchars($request->input('contact'));
+        // $appointment_type = htmlspecialchars($request->input('appointment_type'));
+        // $appointment_date = htmlspecialchars($request->input('appointment_date'));
+        // $appointment_time = htmlspecialchars($request->input('appointment_time'));
+        // $client_notes = htmlspecialchars($request->input('notes'));
+
+        // $formalDate = date('F j, Y', strtotime($appointment_date)); // Date to be send in email
+        // $formalTime = date('g:i A', strtotime($appointment_time));  // Time to send in email
+        // $agentName = Agent::select('agent_name')->where('agent_id', $agent_no)->first(); // Agent name to send in email
+        // $todayDate = date('F j, Y');
+
+        // $appointmentData = [
+        //     'agent_id' => $agent_no,
+        //     'appointment_type' => $appointment_type,
+        //     'appointment_date' => $appointment_date,
+        //     'appointment_time' => $appointment_time,
+        //     'name' => $client_name,
+        //     'email' => $client_email,
+        //     'contact' => $client_contact,
+        //     'notes' => $client_notes,
+        //     'status' => 'pending'
+        // ];
+
+        // $latestAccount = Account::latest('account_no')->first();
+        // $nextAccountNo = $latestAccount ? $latestAccount->account_no + 1 : 25001;
+
+        // $accountData = [
+        //     'account_no' => $nextAccountNo,
+        //     'account_email' => $client_email, 
+        //     'account_password' => Hash::make('ilovefilglobal'),
+        //     'role' => 'client',
+        // ];
+    
+        // $response = Appointment::create($appointmentData);
+    
+        // if ($response) {
+        //     $mail = new PHPMailer(true);
+    
+        //     try {
+        //         // Server settings
+        //         $mail->isSMTP();                                             // Send using SMTP
+        //         $mail->Host       = 'smtp.gmail.com';                        // Set the SMTP server to send through
+        //         $mail->SMTPAuth   = true;                                    // Enable SMTP authentication
+        //         $mail->Username   = env('MAIL_USERNAME');            // SMTP username (your Gmail email address)
+        //         $mail->Password   = env('MAIL_PASSWORD');                   // SMTP password (your Gmail password or App password)
+        //         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;             // Enable implicit TLS encryption
+        //         $mail->Port       = 465;                                     // TCP port to connect to
+    
+        //         // Recipients
+        //         $mail->setFrom(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME')); // Sender's email address
+        //         $mail->addAddress($client_email);                 // Recipient's email address
+    
+        //         $htmlContent = file_get_contents(resource_path('views/email_contents/email-confirmation.blade.php'));
+
+        //         // Replace placeholders with actual values
+        //         $htmlContent = str_replace('{{client_name}}', $client_name, $htmlContent);
+        //         $htmlContent = str_replace('{{appointment_type}}', $appointment_type, $htmlContent);
+        //         $htmlContent = str_replace('{{formalDate}}', $formalDate, $htmlContent);
+        //         $htmlContent = str_replace('{{formalTime}}', $formalTime, $htmlContent);
+        //         $htmlContent = str_replace('{{todayDate}}', $todayDate, $htmlContent);
+        //         $htmlContent = str_replace('{{agentName}}', $agentName->agent_name, $htmlContent);
+                
+        //         // Content
+        //         $mail->isHTML(true);
+        //         $mail->Subject = 'Appointment Confirmation';
+        //         $mail->Body = $htmlContent;                
+    
+        //         $mail->send();
+        //         return response()->json(['success' => true, 'message' => 'Data inserted and email sent successfully!']);
+        //     } catch (Exception $e) {
+        //         return response()->json(['success' => false, 'message' => "Message could not be sent. Mailer Error: {$mail->ErrorInfo}"]);
+        //     }
+        // } else {
+        //     return response()->json(['success' => false, 'message' => 'Failed to insert data.']);
+        // }
+
+        // Input sanitization
         $agent_no = htmlspecialchars($request->input('agent_account_no'));
         $client_name = htmlspecialchars($request->input('fullname'));
         $client_email = htmlspecialchars($request->input('email'));
@@ -94,12 +175,14 @@ class AppointmentController extends Controller
         $appointment_time = htmlspecialchars($request->input('appointment_time'));
         $client_notes = htmlspecialchars($request->input('notes'));
 
-        $formalDate = date('F j, Y', strtotime($appointment_date)); // Date to be send in email
-        $formalTime = date('g:i A', strtotime($appointment_time));  // Time to send in email
-        $agentName = Agent::select('agent_name')->where('agent_id', $agent_no)->first(); // Agent name to send in email
+        // Formatting the date and time
+        $formalDate = date('F j, Y', strtotime($appointment_date)); // Date for email
+        $formalTime = date('g:i A', strtotime($appointment_time));  // Time for email
+        $agentName = Agent::select('agent_name')->where('agent_id', $agent_no)->first(); // Agent name for email
         $todayDate = date('F j, Y');
 
-        $data = [
+        // Prepare the appointment data
+        $appointmentData = [
             'agent_id' => $agent_no,
             'appointment_type' => $appointment_type,
             'appointment_date' => $appointment_date,
@@ -110,12 +193,45 @@ class AppointmentController extends Controller
             'notes' => $client_notes,
             'status' => 'pending'
         ];
-    
-        $response = Appointment::create($data);
-    
-        if ($response) {
+
+        // Start the transaction
+        DB::beginTransaction();
+
+        try {
+            // Create the Appointment record
+            $appointment = Appointment::create($appointmentData);
+
+            // Generate the next account number
+            $latestAccount = Account::latest('account_no')->first();
+            $nextAccountNo = $latestAccount ? $latestAccount->account_no + 1 : 25001;
+            $existingAccount = Account::where('account_email', $client_email)->first();
+
+            if (!$existingAccount) {
+                // Prepare the account data
+                $accountData = [
+                    'account_no' => $nextAccountNo,
+                    'account_email' => $client_email,
+                    'account_password' => Hash::make('ilovefilglobal'),
+                    'role' => 'client',
+                ];
+
+                $clientData = [
+                    'client_id' => $nextAccountNo,
+                    'client_name' => $client_name,
+                    'client_email' => $client_email,
+                    'client_contact' => $client_contact,
+                ];
+
+                // Create the Account record
+                $account = Account::create($accountData);
+                $client = Client::create($clientData);
+            }
+            // Commit the transaction if both are successful
+            DB::commit();
+            
+            // Send the confirmation email
             $mail = new PHPMailer(true);
-    
+
             try {
                 // Server settings
                 $mail->isSMTP();                                             // Send using SMTP
@@ -125,90 +241,102 @@ class AppointmentController extends Controller
                 $mail->Password   = env('MAIL_PASSWORD');                   // SMTP password (your Gmail password or App password)
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;             // Enable implicit TLS encryption
                 $mail->Port       = 465;                                     // TCP port to connect to
-    
+
                 // Recipients
                 $mail->setFrom(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME')); // Sender's email address
                 $mail->addAddress($client_email);                 // Recipient's email address
-    
-                $htmlContent = file_get_contents(resource_path('views/email_contents/email-confirmation.blade.php'));
 
-                // Replace placeholders with actual values
+                // Load the email content and replace placeholders
+                $htmlContent = file_get_contents(resource_path('views/email_contents/email-confirmation.blade.php'));
                 $htmlContent = str_replace('{{client_name}}', $client_name, $htmlContent);
                 $htmlContent = str_replace('{{appointment_type}}', $appointment_type, $htmlContent);
                 $htmlContent = str_replace('{{formalDate}}', $formalDate, $htmlContent);
                 $htmlContent = str_replace('{{formalTime}}', $formalTime, $htmlContent);
                 $htmlContent = str_replace('{{todayDate}}', $todayDate, $htmlContent);
                 $htmlContent = str_replace('{{agentName}}', $agentName->agent_name, $htmlContent);
-                
+
                 // Content
                 $mail->isHTML(true);
                 $mail->Subject = 'Appointment Confirmation';
-                $mail->Body = $htmlContent;                
-    
+                $mail->Body    = $htmlContent;
+
+                // Send the email
                 $mail->send();
+                
+                // Return a success response
                 return response()->json(['success' => true, 'message' => 'Data inserted and email sent successfully!']);
             } catch (Exception $e) {
+                // In case of an email error, we rollback the transaction
+                DB::rollback();
                 return response()->json(['success' => false, 'message' => "Message could not be sent. Mailer Error: {$mail->ErrorInfo}"]);
             }
-        } else {
-            return response()->json(['success' => false, 'message' => 'Failed to insert data.']);
+
+        } catch (\Exception $e) {
+            // Rollback the transaction if anything fails
+            DB::rollback();
+            return response()->json(['success' => false, 'message' => 'Failed to insert data. ' . $e->getMessage()]);
         }
     }
 
     public function myBookings() {
-        $client = Account::where('account_no', session('user_id'))->first();
+        $client = Client::where('client_id', session('user_id'))->first();
 
         $pendingBookings = DB::table('appointments')
                             ->join('agents', 'appointments.agent_id', '=', 'agents.agent_id')
-                            ->where('email', $client->account_email)
+                            ->where('email', $client->client_email)
                             ->where('status', 'pending')
                             ->where('appointment_date', '>', Carbon::now())
+                            ->orderBy('appointment_date')
                             ->get();
 
         $approvedBookings = DB::table('appointments')
                             ->join('agents', 'appointments.agent_id', '=', 'agents.agent_id')
-                            ->where('email', $client->account_email)
+                            ->where('email', $client->client_email)
                             ->where('status', 'accepted')
                             ->where('appointment_date', '>', Carbon::now())
+                            ->orderBy('appointment_date')
                             ->get();
 
         $bookingCount = $approvedBookings->count();
 
         $rejectedBookings = DB::table('appointments')
                             ->join('agents', 'appointments.agent_id', '=', 'agents.agent_id')
-                            ->where('email', $client->account_email)
+                            ->where('email', $client->client_email)
                             ->where('status', 'rejected')
                             ->where('appointment_date', '>', Carbon::now())
+                            ->orderBy('appointment_date')
                             ->get();
 
-        return view('client.my-bookings', compact('pendingBookings', 'approvedBookings', 'rejectedBookings', 'bookingCount'));
+        return view('client.my-bookings', compact('client', 'pendingBookings', 'approvedBookings', 'rejectedBookings', 'bookingCount'));
     }
 
     public function pastBookings() {
-        $client = Account::where('account_no', session('user_id'))->first();
+        $client = Client::where('client_id', session('user_id'))->first();
 
         $approvedBookings = DB::table('appointments')
                             ->join('agents', 'appointments.agent_id', '=', 'agents.agent_id')
-                            ->where('email', $client->account_email)
+                            ->where('email', $client->client_email)
                             ->where('status', 'accepted')
                             ->where('appointment_date', '<', Carbon::now())
+                            ->orderBy('appointment_date')
                             ->get();
 
         $bookingCount = DB::table('appointments')
                             ->join('agents', 'appointments.agent_id', '=', 'agents.agent_id')
-                            ->where('email', $client->account_email)
+                            ->where('email', $client->client_email)
                             ->where('status', 'accepted')
                             ->where('appointment_date', '>', Carbon::now())
+                            ->orderBy('appointment_date')
                             ->count();
 
         $rejectedBookings = DB::table('appointments')
                             ->join('agents', 'appointments.agent_id', '=', 'agents.agent_id')
-                            ->where('email', $client->account_email)
+                            ->where('email', $client->client_email)
                             ->where('status', 'rejected')
                             ->where('appointment_date', '<', Carbon::now())
+                            ->orderBy('appointment_date')
                             ->get();
 
-        return view('client.past-bookings', compact('approvedBookings', 'rejectedBookings', 'bookingCount'));
-
+        return view('client.past-bookings', compact('client', 'approvedBookings', 'rejectedBookings', 'bookingCount'));
     }
 }

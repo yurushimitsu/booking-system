@@ -5,8 +5,14 @@
   
 <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
 
+<style>
+    #dt-length-0 {
+        padding-right: 2rem
+    }
+</style>
+
 <body>
-    
+
 <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar" type="button" class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
     <span class="sr-only">Open sidebar</span>
     <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -16,7 +22,7 @@
  
 <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
     <div class="h-full px-3 py-4 overflow-y-auto bg-[#F0F8FF]">
-        <a href="https://flowbite.com/" class="flex justify-center items-center ps-2.5">
+        <a href="#" class="flex justify-center items-center ps-2.5">
             <img src="{{ asset('img/fil-global-dark-logo.png') }}" class="h-20" alt="Flowbite Logo" />
         </a>
         <div class="flex justify-center mb-3">
@@ -109,7 +115,7 @@
                         </tbody>
                     </table>
                     <!-- Accept Appointment Modal -->
-                    <div id="acceptAppointentModal" class="fixed z-60 inset-0 flex items-center justify-center hidden">
+                    <div id="acceptAppointentModal" class="fixed z-60 inset-0 flex backdrop-blur-xs items-center justify-center hidden">
                         <form id="acceptAppointmentModalForm" method="POST" action="{{ route('approveAppointment') }}">
                             @csrf
                             <div class="bg-white p-6 rounded-3xl shadow-lg w-100">
@@ -133,7 +139,7 @@
                         </form>
                     </div>
                     <!-- Reject Appointment Modal -->
-                    <div id="rejectAppointentModal" class="fixed z-60 inset-0 flex items-center justify-center hidden">
+                    <div id="rejectAppointentModal" class="fixed z-60 inset-0 flex backdrop-blur-xs items-center justify-center hidden">
                         <form id="appointmentModalForm" method="POST" action="{{ route('rejectAppointment') }}">
                             @csrf
                             <div class="bg-white p-6 rounded-3xl shadow-lg w-100">
@@ -190,8 +196,8 @@
                     </div>
 
                     {{-- Calendar Modal --}}
-                    <div id="calendarModal" class="fixed z-80 inset-0 flex items-center justify-center hidden">
-                        <div class="bg-white p-6 rounded-lg shadow-lg w-120">
+                    <div id="calendarModal" class="fixed z-80 inset-0 flex backdrop-blur-xs items-center justify-center hidden">
+                        <div class="bg-white p-6 rounded-lg shadow-lg md:w-120 m-5">
                             <div class="flex items-center justify-between pb-3">
                                 <h2 id="calendarTitle" class="text-2xl font-bold">Block your schedule</h2>
                                 <button id="closeCalendarModal" type="button" class="text-gray-400 bg-transparent cursor-pointer hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
@@ -424,7 +430,7 @@
                     </div>
 
                     {{-- Timeslot Modal --}}
-                    <div id="timeslotModal" class="fixed z-60 inset-0 flex items-center justify-center hidden">
+                    <div id="timeslotModal" class="fixed z-60 inset-0 flex backdrop-blur-xs items-center justify-center hidden">
                         <div class="bg-white p-6 rounded-3xl shadow-lg w-100">           
                             <div id="timeslotHeader" class="flex items-center justify-between pb-3">
                                 <h2 id="timeslotDate" class="text-lg font-bold"></h2>
@@ -461,7 +467,7 @@
                     </div>
 
                     <!-- Delete Confirmation Modal -->
-                    <div id="deleteConfirmationModal" class="fixed z-70 inset-0 flex items-center justify-center hidden">
+                    <div id="deleteConfirmationModal" class="fixed z-70 inset-0 flex backdrop-blur-xs items-center justify-center hidden">
                         <form id="deleteBlockedSlotForm" class="hidden" method="POST">
                             @csrf
                             @method('DELETE')
@@ -489,6 +495,17 @@
             processing: true,
             serverSide: false,
             scrollX: true,
+            pagingType: 'simple_numbers',
+            language: {
+                paginate: {
+                previous: `<svg class="w-3 h-3 cursor-pointer text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 1 1.3 6.326a.91.91 0 0 0 0 1.348L7 13"/>
+                            </svg>`,  
+                next: `<svg class="w-3 h-3 cursor-pointer text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"/>
+                        </svg>`,
+                }
+            },
             ajax: {
                 url: '{{ route("pendingAppointments") }}',
                 dataSrc: function (json) {

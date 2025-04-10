@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\Agent;
+use App\Models\Client;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
 class DashboardController extends Controller
@@ -16,16 +18,16 @@ class DashboardController extends Controller
 
         $bookingCount = 0;
         if ((Session::has('user_role') && session('user_role') == 'client')) {
-            $client = Account::where('account_no', session('user_id'))->first();
+            $client = Client::where('client_id', session('user_id'))->first();
             $bookingCount = DB::table('appointments')
                             ->join('agents', 'appointments.agent_id', '=', 'agents.agent_id')
-                            ->where('email', $client->account_email)
+                            ->where('email', $client->client_email)
                             ->where('status', 'accepted')
                             ->where('appointment_date', '>', Carbon::now())
                             ->count();
         }
 
-        return view('client.agents', compact('allAgents', 'bookingCount'));
+        return view('client.agents', compact('client','allAgents', 'bookingCount'));
     }
 
     function searchAgent(Request $request) {
@@ -59,6 +61,40 @@ class DashboardController extends Controller
 
             // Return agents as a JSON response
             return response()->json($agents);
+        }
+    }
+
+    public function changePasswordNav() {
+        $client = Client::where('client_id', session('user_id'))->first();
+
+        $bookingCount = DB::table('appointments')
+                            ->join('agents', 'appointments.agent_id', '=', 'agents.agent_id')
+                            ->where('email', $client->client_email)
+                            ->where('status', 'accepted')
+                            ->where('appointment_date', '>', Carbon::now())
+                            ->orderBy('appointment_date')
+                            ->count();
+
+        return view('client.change-password', compact('client', 'bookingCount'));
+    }
+
+    public function changePassword(Request $request) {
+        $old_password = htmlspecialchars($request->input('old-password'));
+        $new_password = htmlspecialchars($request->input('new-password'));
+        $confirm_password = htmlspecialchars($request->input('confirm-password'));
+
+        $user = Account::where('account_no', session('user_id'))->first();
+        if ($user && Hash::check($old_password, $user->account_password)) {
+            if ($new_password === $confirm_password) {
+                $user->account_password = Hash::make($confirm_password);
+                $user->save();
+
+                return response()->json(['success' => true, 'message' => 'Password Changed Successfully']);  
+            } else {
+                return response()->json(['success' => false, 'message' => "New Password Doesn't Match"]);
+            }
+        } else {
+            return response()->json(['success' => false, 'message' => 'Wrong Password']);
         }
     }
 }
