@@ -65,7 +65,7 @@
                         <div class="ms-3 text-start">
                             <div class="text-sm">{{ \Carbon\Carbon::parse($approved->appointment_time)->format('g:i A') }}</div>
                             <div class="text-sm">Meeting with PC {{ $approved->agent_name }}</div>
-                            <a href="#" target="_blank" class="text-sm">Meeting Link: <span class="text-blue-600 hover:text-blue-800 cursor-pointer underline">{{ $approved->meeting_link }}</span></a>
+                            <div class="text-sm">Meeting Link: <a href="{{ $approved->meeting_link }}" target="_blank" class="text-blue-600 hover:text-blue-800 cursor-pointer underline break-words">{{ $approved->meeting_link }}</a></div>
                         </div>
                     </div>
                 @empty

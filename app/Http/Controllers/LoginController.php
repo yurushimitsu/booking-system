@@ -37,7 +37,7 @@ class LoginController extends Controller
                 case 'client':
                     // return redirect()->route('myBookings')->with('success', 'Login Success');
                     if (Hash::check('ilovefilglobal', $user->account_password)) {
-                        return redirect('/client/change-password')->with('error', 'Change Your Password First');
+                        return redirect('/client/change-password')->with('error', 'Please change your password before proceeding');
                     } else {
                         return redirect()->route('myBookings');  // Redirect to user area (agents can be clients too)
                     }

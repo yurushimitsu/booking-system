@@ -24,6 +24,7 @@ class AppointmentController extends Controller
                             ->where('appointments.status', 'pending')
                             ->where('appointments.agent_id', session('user_id'))
                             ->select('agents.meeting_link', 'appointments.*')
+                            ->orderBy('appointments.appointment_date')
                             ->get();
 
         return response()->json($pendingAppointments);
@@ -31,13 +32,30 @@ class AppointmentController extends Controller
 
     public function approveAppointment(Request $request) {
         $appointmentId = $request->input('appointmentId');
+        $meetingLink = $request->input('meetingLink');
 
         $appointment = Appointment::find($appointmentId);
         if ($appointment) {
             $appointment->status = 'accepted';
-            $appointment->save();
+            $agent = Agent::where('agent_id', $appointment->agent_id)->first();
+
+            if ($agent) {
+                if ($agent->meeting_link != $meetingLink) {
+                    $agent->meeting_link = $meetingLink;
+
+                    $appointment->save();
+                    $agent->save();
+                    
+                    return response()->json(['success' => true, 'message' => 'Appointment approved']);
+                } else {
+                    $appointment->save();
+                    return response()->json(['success' => true, 'message' => 'Appointment approved']);
+                }
+            } else {
+                return response()->json(['success' => false, 'message' => 'Agent not found']);
+
+            }
     
-            return response()->json(['success' => true, 'message' => 'Appointment approved']);
         } else {
             return response()->json(['success' => false, 'message' => 'Appointment not found']);
         }
@@ -86,85 +104,6 @@ class AppointmentController extends Controller
     
     // Post appointment request and email
     public function postAppointmentRequest(Request $request) {
-        // $agent_no = htmlspecialchars($request->input('agent_account_no'));
-        // $client_name = htmlspecialchars($request->input('fullname'));
-        // $client_email = htmlspecialchars($request->input('email'));
-        // $client_contact = htmlspecialchars($request->input('contact'));
-        // $appointment_type = htmlspecialchars($request->input('appointment_type'));
-        // $appointment_date = htmlspecialchars($request->input('appointment_date'));
-        // $appointment_time = htmlspecialchars($request->input('appointment_time'));
-        // $client_notes = htmlspecialchars($request->input('notes'));
-
-        // $formalDate = date('F j, Y', strtotime($appointment_date)); // Date to be send in email
-        // $formalTime = date('g:i A', strtotime($appointment_time));  // Time to send in email
-        // $agentName = Agent::select('agent_name')->where('agent_id', $agent_no)->first(); // Agent name to send in email
-        // $todayDate = date('F j, Y');
-
-        // $appointmentData = [
-        //     'agent_id' => $agent_no,
-        //     'appointment_type' => $appointment_type,
-        //     'appointment_date' => $appointment_date,
-        //     'appointment_time' => $appointment_time,
-        //     'name' => $client_name,
-        //     'email' => $client_email,
-        //     'contact' => $client_contact,
-        //     'notes' => $client_notes,
-        //     'status' => 'pending'
-        // ];
-
-        // $latestAccount = Account::latest('account_no')->first();
-        // $nextAccountNo = $latestAccount ? $latestAccount->account_no + 1 : 25001;
-
-        // $accountData = [
-        //     'account_no' => $nextAccountNo,
-        //     'account_email' => $client_email, 
-        //     'account_password' => Hash::make('ilovefilglobal'),
-        //     'role' => 'client',
-        // ];
-    
-        // $response = Appointment::create($appointmentData);
-    
-        // if ($response) {
-        //     $mail = new PHPMailer(true);
-    
-        //     try {
-        //         // Server settings
-        //         $mail->isSMTP();                                             // Send using SMTP
-        //         $mail->Host       = 'smtp.gmail.com';                        // Set the SMTP server to send through
-        //         $mail->SMTPAuth   = true;                                    // Enable SMTP authentication
-        //         $mail->Username   = env('MAIL_USERNAME');            // SMTP username (your Gmail email address)
-        //         $mail->Password   = env('MAIL_PASSWORD');                   // SMTP password (your Gmail password or App password)
-        //         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;             // Enable implicit TLS encryption
-        //         $mail->Port       = 465;                                     // TCP port to connect to
-    
-        //         // Recipients
-        //         $mail->setFrom(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME')); // Sender's email address
-        //         $mail->addAddress($client_email);                 // Recipient's email address
-    
-        //         $htmlContent = file_get_contents(resource_path('views/email_contents/email-confirmation.blade.php'));
-
-        //         // Replace placeholders with actual values
-        //         $htmlContent = str_replace('{{client_name}}', $client_name, $htmlContent);
-        //         $htmlContent = str_replace('{{appointment_type}}', $appointment_type, $htmlContent);
-        //         $htmlContent = str_replace('{{formalDate}}', $formalDate, $htmlContent);
-        //         $htmlContent = str_replace('{{formalTime}}', $formalTime, $htmlContent);
-        //         $htmlContent = str_replace('{{todayDate}}', $todayDate, $htmlContent);
-        //         $htmlContent = str_replace('{{agentName}}', $agentName->agent_name, $htmlContent);
-                
-        //         // Content
-        //         $mail->isHTML(true);
-        //         $mail->Subject = 'Appointment Confirmation';
-        //         $mail->Body = $htmlContent;                
-    
-        //         $mail->send();
-        //         return response()->json(['success' => true, 'message' => 'Data inserted and email sent successfully!']);
-        //     } catch (Exception $e) {
-        //         return response()->json(['success' => false, 'message' => "Message could not be sent. Mailer Error: {$mail->ErrorInfo}"]);
-        //     }
-        // } else {
-        //     return response()->json(['success' => false, 'message' => 'Failed to insert data.']);
-        // }
-
         // Input sanitization
         $agent_no = htmlspecialchars($request->input('agent_account_no'));
         $client_name = htmlspecialchars($request->input('fullname'));

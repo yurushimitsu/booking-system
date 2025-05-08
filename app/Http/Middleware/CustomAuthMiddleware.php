@@ -35,9 +35,9 @@ class CustomAuthMiddleware
             // Check if the user's password is still the default password
             if ($user->role === 'client' && Hash::check('ilovefilglobal', $user->account_password)) {
                 // Check if the current route is not 'changePasswordNav'
-                if (!Route::is('changePasswordNav') && !Route::is('clientLogout')) {
+                if (!$request->is('client/change-password') && !Route::is('clientLogout')) {
                     // If the user is a client and still has the default password, and they are not on the change password page
-                    return redirect('/client/change-password')->with('error', 'Please change your password before proceeding.');
+                    return redirect('/client/change-password')->with('error', 'Please change your password before proceeding');
                 }
             }
 
@@ -64,21 +64,13 @@ class CustomAuthMiddleware
                         return redirect()->route('adminDashboard');  // Redirect to admin area
                     case 'client':
                         if (Hash::check('ilovefilglobal', $user->account_password)) {
-                            return redirect('/client/change-password')->with('error', 'Change Your Password First');
+                            return redirect('/client/change-password')->with('error', 'Please change your password before proceeding');
                         } else {
                             return redirect()->route('myBookings');  // Redirect to user area (agents can be clients too)
                         }
                     default:
                         return redirect('/login')->with('error', 'Invalid role.');
                 }
-
-                // if ($user->role == 'client') {
-                //     if (Hash::check('ilovefilglobal', $user->account_password)) {
-                //         return redirect('/client/change-password')->with('error', 'Change Your Password First');
-                //     } else {
-                //         return redirect('/client/change-password')->with('error', 'Change Your Password First');
-                //     }
-                // }
             }
 
             // If credentials don't match, return back to login page with an error

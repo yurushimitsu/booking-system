@@ -103,6 +103,7 @@
                     <table id="pendingAppointmentsTable" class="display whitespace-nowrap">
                         <thead class="bg-[#E2DFFF] text-sm">
                             <tr class="text-sm">
+                                <th>No.</th>
                                 <th>Client Name</th>
                                 <th>Date and Time</th>
                                 <th>Email</th>
@@ -506,14 +507,23 @@
                         </svg>`,
                 }
             },
+            order: [
+                [0, 'asc']
+            ],
             ajax: {
                 url: '{{ route("pendingAppointments") }}',
                 dataSrc: function (json) {
                     return json;
                 }
             },
-            
             columns: [
+                {
+                    data: null,
+                    type: 'string',
+                    render: function (data, type, row, meta) {
+                        return meta.row + 1; // Row number
+                    }
+                },
                 { data: 'name' },
                 { 
                     data: null,
@@ -535,12 +545,11 @@
                     }
                 },
                 { data: 'email' },
-                { data: 'contact' },
+                { data: 'contact', type: 'string' },
                 { data: 'appointment_type' },
                 {
                     data: null,
                     render: function(data, type, row) {
-                        // console.log(row.meeting_link);
                         return `
                             <button id="acceptPendingModal" class="rounded-full bg-green-300 cursor-pointer p-0.5" data-id="${row.id}" data-link="${row.meeting_link}">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -566,7 +575,7 @@
             // Populate the modal with the appointment data
             $('#modalAcceptFormContent').html(`
                 <input type="hidden" id="appointmentId" name="appointmentId" value="${id}">
-                <input type="text" id="meeting-link" name="meeting-link" value="${meetingLink}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Meeting Link" required />
+                <input type="text" id="meetingLink" name="meetingLink" value="${meetingLink}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Meeting Link" required />
             `);
 
             // Show the modal
@@ -873,7 +882,7 @@
                                         <div>Purpose:</div>
                                         <div class="break-words">${appointment.appointment_type}</div>
                                         <div>Link:</div>
-                                        <div class="break-words">${appointment.meeting_link}</div>
+                                        <a href="${appointment.meeting_link}" target="_blank" class="underline text-blue-500 hover:text-blue-700 break-words">${appointment.meeting_link}</a>
                                         <div>Status:</div>
                                         <div class="break-words">${appointment.status}</div>
                                     </div>

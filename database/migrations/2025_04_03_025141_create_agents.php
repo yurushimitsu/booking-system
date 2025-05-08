@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreign('agent_email')->references('account_email')->on('accounts');
             $table->string('meeting_link');
             $table->string('country');
-            $table->string('profile_picture');
+            $table->string('profile_picture')->nullable();
             $table->timestamp('created_at')->useCurrent();
         });
     }

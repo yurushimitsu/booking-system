@@ -153,14 +153,12 @@
             
             // If the selected date is Saturday (6) or Sunday (0), reset the input field
             if (day === 6 || day === 0) {
-                // alert("You cannot select a Saturday or Sunday.");
                 Swal.fire({
                     icon: 'warning',
                     title: 'We are not available on weekends',
                     text: 'Please select another date.',
                 });
                 dateInput.value = ''; // Clear the input field if the date is invalid
-                // timeSelect.disabled = true; // Disable time select when date is cleared
             }
         });
 
@@ -170,10 +168,8 @@
 
             // Choose date first to enable time select
             if (dateInput.value) {
-                // timeSelect.disabled = false;
                 timeSelect.selectedIndex = 0;
             } else {
-                // timeSelect.disabled = true;
                 timeSelect.selectedIndex = 0;
             }
 

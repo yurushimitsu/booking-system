@@ -16,7 +16,6 @@ class DashboardController extends Controller
     public function getAllAgents() {
         $allAgents = Agent::select('agent_id', 'agent_name', 'country', 'profile_picture')->get(); 
 
-        $bookingCount = 0;
         if ((Session::has('user_role') && session('user_role') == 'client')) {
             $client = Client::where('client_id', session('user_id'))->first();
             $bookingCount = DB::table('appointments')
@@ -25,9 +24,10 @@ class DashboardController extends Controller
                             ->where('status', 'accepted')
                             ->where('appointment_date', '>', Carbon::now())
                             ->count();
+            return view('client.agents', compact('client','allAgents', 'bookingCount'));
+        } else {
+            return view('client.agents', compact('allAgents'));
         }
-
-        return view('client.agents', compact('client','allAgents', 'bookingCount'));
     }
 
     function searchAgent(Request $request) {

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('client_email');
             $table->foreign('client_email')->references('account_email')->on('accounts');
             $table->string('client_contact');
-            $table->string('profile_picture');
+            $table->string('profile_picture')->nullable();
             $table->timestamp('created_at')->useCurrent();
         });
     }
