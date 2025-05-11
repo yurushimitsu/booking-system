@@ -58,10 +58,10 @@
 </aside>
  
 <div class="p-10 sm:ml-64">
-    <div class="flex-row text-2xl text-center font-bold my-3">
+    <div class="flex-row text-2xl text-center font-bold my-3 pb-5">
         Appointments
     </div>
-    <div class="pb-10">
+    {{-- <div class="pb-10">
         <form class="max-w-lg mx-auto" id="searchForm">
             <div class="flex shadow-lg">
                 <label for="search-dropdown" class="mb-2 text-sm font-medium text-gray-900 sr-only">Country</label>
@@ -87,7 +87,7 @@
                 </div>
             </div>
         </form>
-    </div>
+    </div> --}}
     <div class="flex flex-row pb-10">
         <div class="w-full bg-white rounded-2xl shadow-xl border border-gray-100">
             <div class="p-10">
