@@ -33,7 +33,7 @@ class CustomAuthMiddleware
             }
             
             // Check if the user's password is still the default password
-            if ($user->role === 'client' && Hash::check('ilovefilglobal', $user->account_password)) {
+            if ($user->role === 'client' && $user->new_user) {
                 // Check if the current route is not 'changePasswordNav'
                 if (!$request->is('client/change-password') && !Route::is('clientLogout')) {
                     // If the user is a client and still has the default password, and they are not on the change password page
@@ -63,7 +63,7 @@ class CustomAuthMiddleware
                     case 'agent':
                         return redirect()->route('adminDashboard');  // Redirect to admin area
                     case 'client':
-                        if (Hash::check('ilovefilglobal', $user->account_password)) {
+                        if ($user->new_user) {
                             return redirect('/client/change-password')->with('error', 'Please change your password before proceeding');
                         } else {
                             return redirect()->route('myBookings');  // Redirect to user area (agents can be clients too)
