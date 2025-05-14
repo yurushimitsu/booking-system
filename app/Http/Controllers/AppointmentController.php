@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+use Illuminate\Support\Str;
 
 class AppointmentController extends Controller
 {
@@ -83,7 +84,12 @@ class AppointmentController extends Controller
                             ->where('agent_id', $agent_no)
                             ->first();
         if ($row) {
-            return view('client.appointment-form', compact('row', 'agent_no'));
+            if (session('user_role') === 'client') {
+                $client = Client::where('client_id', session('user_id'))->first();
+                return view('client.appointment-form', compact('row', 'agent_no', 'client'));
+            } else {
+                return view('client.appointment-form', compact('row', 'agent_no'));
+            }
         } else {
             return redirect()->route('custom.fallback');
         }
@@ -144,13 +150,13 @@ class AppointmentController extends Controller
             $latestAccount = Account::latest('account_no')->first();
             $nextAccountNo = $latestAccount ? $latestAccount->account_no + 1 : 25001;
             $existingAccount = Account::where('account_email', $client_email)->first();
-
+            $tempPass = Str::random(10);
             if (!$existingAccount) {
                 // Prepare the account data
                 $accountData = [
                     'account_no' => $nextAccountNo,
                     'account_email' => $client_email,
-                    'account_password' => Hash::make('ilovefilglobal'),
+                    'account_password' => Hash::make($tempPass),
                     'role' => 'client',
                 ];
 
@@ -193,6 +199,15 @@ class AppointmentController extends Controller
                 $htmlContent = str_replace('{{formalTime}}', $formalTime, $htmlContent);
                 $htmlContent = str_replace('{{todayDate}}', $todayDate, $htmlContent);
                 $htmlContent = str_replace('{{agentName}}', $agentName->agent_name, $htmlContent);
+
+                // Determine if tempPass section should be included
+                if (!$existingAccount) {
+                    $tempPassHtml = 'You may use this temporary password: <b>' . $tempPass . '</b>';
+                } else {
+                    $tempPassHtml = '';
+                }
+
+                $htmlContent = str_replace('{{tempPassSection}}', $tempPassHtml, $htmlContent);
 
                 // Content
                 $mail->isHTML(true);

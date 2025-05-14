@@ -29,8 +29,8 @@ Route::middleware(['guest'])->prefix('login')->group(function () {
     Route::post('/', [LoginController::class, 'loginPost'])->name('login.submit');
 });
 
-Route::middleware(['guest'])->prefix('user')->group(function () {
-    Route::get('/all-agents', [DashboardController::class, 'getAllAgents'])->name('agents');
+Route::middleware(['guest'])->group(function () {
+    Route::get('/', [DashboardController::class, 'getAllAgents'])->name('agents');
     Route::get('/booking-count', [DashboardController::class, 'bookingCount'])->name('bookingCount');
 
     Route::get('/search-agent', [DashboardController::class, 'searchAgent'])->name('searchAgent');

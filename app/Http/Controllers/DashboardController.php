@@ -87,6 +87,7 @@ class DashboardController extends Controller
         if ($user && Hash::check($old_password, $user->account_password)) {
             if ($new_password === $confirm_password) {
                 $user->account_password = Hash::make($confirm_password);
+                $user->new_user = false;
                 $user->save();
 
                 return response()->json(['success' => true, 'message' => 'Password Changed Successfully']);  

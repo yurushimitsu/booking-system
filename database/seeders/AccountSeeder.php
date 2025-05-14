@@ -16,21 +16,21 @@ class AccountSeeder extends Seeder
     {
         $multipleAccounts = [
             [
-                'account_no' => '20251001',
+                'account_no' => '2025001',
                 'account_email' => 'jeddymanalili123@gmail.com',
-                'account_password' => Hash::make('password'),
+                'account_password' => Hash::make('ilovefilglobal'),
                 'role' => 'agent',
             ],
             [
-                'account_no' => '20251002',
-                'account_email' => 'christian@gmail.com',
-                'account_password' => Hash::make('password'),
+                'account_no' => '2025002',
+                'account_email' => 'test@gmail.com',
+                'account_password' => Hash::make('ilovefilglobal'),
                 'role' => 'agent',
             ],
             [
-                'account_no' => '20251003',
-                'account_email' => 'leizl@gmail.com',
-                'account_password' => Hash::make('password'),
+                'account_no' => '2025003',
+                'account_email' => 'test2@gmail.com',
+                'account_password' => Hash::make('ilovefilglobal'),
                 'role' => 'agent',
             ],
         ];

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('account_email')->unique();
             $table->string('account_password');
             $table->string('role');
+            $table->boolean('new_user')->default(true);
             $table->timestamp('created_at')->useCurrent();
         });
     }
