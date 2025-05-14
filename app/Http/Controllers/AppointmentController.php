@@ -40,23 +40,63 @@ class AppointmentController extends Controller
             $appointment->status = 'accepted';
             $agent = Agent::where('agent_id', $appointment->agent_id)->first();
 
+            // Send the confirmation email
+            $mail = new PHPMailer(true);
+
+            // Formatting the date and time
+            $formalDate = date('F j, Y', strtotime($appointment->appointment_date)); // Date for email
+            $formalTime = date('g:i A', strtotime($appointment->appointment_time));  // Time for email
+
             if ($agent) {
+                // Update meeting link if needed
                 if ($agent->meeting_link != $meetingLink) {
                     $agent->meeting_link = $meetingLink;
+                    $agent->save();  // Save agent
+                }
 
-                    $appointment->save();
-                    $agent->save();
-                    
-                    return response()->json(['success' => true, 'message' => 'Appointment approved']);
-                } else {
-                    $appointment->save();
-                    return response()->json(['success' => true, 'message' => 'Appointment approved']);
+                // Save the appointment (regardless of whether the meeting link changed)
+                $appointment->save();
+
+                try {
+                    // Server settings
+                    $mail->isSMTP();                                             // Send using SMTP
+                    $mail->Host       = 'smtp.gmail.com';                        // Set the SMTP server to send through
+                    $mail->SMTPAuth   = true;                                    // Enable SMTP authentication
+                    $mail->Username   = env('MAIL_USERNAME');                    // SMTP username (your Gmail email address)
+                    $mail->Password   = env('MAIL_PASSWORD');                    // SMTP password (your Gmail password or App password)
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;             // Enable implicit TLS encryption
+                    $mail->Port       = 465;                                     // TCP port to connect to
+
+                    // Recipients
+                    $mail->setFrom(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));  // Sender's email address
+                    $mail->addAddress($appointment->email);                        // Recipient's email address
+
+                    // Load the email content and replace placeholders
+                    $htmlContent = file_get_contents(resource_path('views/email_contents/email-approve-book.blade.php'));
+                    $htmlContent = str_replace('{{client_name}}', $appointment->name, $htmlContent);
+                    $htmlContent = str_replace('{{appointment_type}}', $appointment->appointment_type, $htmlContent);
+                    $htmlContent = str_replace('{{formalDate}}', $formalDate, $htmlContent);
+                    $htmlContent = str_replace('{{formalTime}}', $formalTime, $htmlContent);
+                    $htmlContent = str_replace('{{agentName}}', $agent->agent_name, $htmlContent);
+
+                    // Content
+                    $mail->isHTML(true);
+                    $mail->Subject = 'Appointment Approved';
+                    $mail->Body    = $htmlContent;
+
+                    // Send the email
+                    $mail->send();
+
+                    // Return a success response
+                    return response()->json(['success' => true, 'message' => 'Appointment Approved']);
+                } catch (Exception $e) {
+                    // In case of an email error, we rollback the transaction
+                    DB::rollback();
+                    return response()->json(['success' => false, 'message' => "Message could not be sent. Mailer Error: {$mail->ErrorInfo}"]);
                 }
             } else {
                 return response()->json(['success' => false, 'message' => 'Agent not found']);
-
             }
-    
         } else {
             return response()->json(['success' => false, 'message' => 'Appointment not found']);
         }
@@ -71,8 +111,53 @@ class AppointmentController extends Controller
             $appointment->status = 'rejected';
             $appointment->notes = $reason;
             $appointment->save();
-    
-            return response()->json(['success' => true, 'message' => 'Appointment rejected']);
+
+            // Send the confirmation email
+            $mail = new PHPMailer(true);
+
+            // Formatting the date and time
+            $formalDate = date('F j, Y', strtotime($appointment->appointment_date)); // Date for email
+            $formalTime = date('g:i A', strtotime($appointment->appointment_time));  // Time for email
+            $agent = Agent::where('agent_id', $appointment->agent_id)->first();
+
+            try {
+                // Server settings
+                $mail->isSMTP();                                             // Send using SMTP
+                $mail->Host       = 'smtp.gmail.com';                        // Set the SMTP server to send through
+                $mail->SMTPAuth   = true;                                    // Enable SMTP authentication
+                $mail->Username   = env('MAIL_USERNAME');                    // SMTP username (your Gmail email address)
+                $mail->Password   = env('MAIL_PASSWORD');                    // SMTP password (your Gmail password or App password)
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;             // Enable implicit TLS encryption
+                $mail->Port       = 465;                                     // TCP port to connect to
+
+                // Recipients
+                $mail->setFrom(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));  // Sender's email address
+                $mail->addAddress($appointment->email);                        // Recipient's email address
+
+                // Load the email content and replace placeholders
+                $htmlContent = file_get_contents(resource_path('views/email_contents/email-reject-book.blade.php'));
+                $htmlContent = str_replace('{{client_name}}', $appointment->name, $htmlContent);
+                $htmlContent = str_replace('{{appointment_type}}', $appointment->appointment_type, $htmlContent);
+                $htmlContent = str_replace('{{formalDate}}', $formalDate, $htmlContent);
+                $htmlContent = str_replace('{{formalTime}}', $formalTime, $htmlContent);
+                $htmlContent = str_replace('{{agentName}}', $agent->agent_name, $htmlContent);
+                $htmlContent = str_replace('{{reason}}', $reason, $htmlContent);
+
+                // Content
+                $mail->isHTML(true);
+                $mail->Subject = 'Appointment Approved';
+                $mail->Body    = $htmlContent;
+
+                // Send the email
+                $mail->send();
+
+                // Return a success response
+                return response()->json(['success' => true, 'message' => 'Appointment Rejected']);
+            } catch (Exception $e) {
+                // In case of an email error, we rollback the transaction
+                DB::rollback();
+                return response()->json(['success' => false, 'message' => "Message could not be sent. Mailer Error: {$mail->ErrorInfo}"]);
+            }
         } else {
             return response()->json(['success' => false, 'message' => 'Appointment not found']);
         }
