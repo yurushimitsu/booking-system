@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title></title>
 
-    {{-- tailwind css --}}
-    @vite('resources/css/app.css')
-
     {{-- flowbite --}}
     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+
+    {{-- tailwind css --}}
+    @vite('resources/css/app.css')
 
     {{-- fullcalendar --}}
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>

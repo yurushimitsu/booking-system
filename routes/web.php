@@ -56,7 +56,7 @@ Route::middleware(['custom.auth', 'role:agent'])->prefix('admin')->group(functio
     Route::get('/logout', [LoginController::class, 'logout'])->name('adminLogout');
 });
 
-Route::middleware(['custom.auth', 'role:client'])->prefix('client')->group(function () {
+Route::middleware(['custom.auth', 'role:client'])->group(function () {
     Route::get('/my-bookings', [AppointmentController::class, 'myBookings'])->name('myBookings');
     Route::get('/past-bookings', [AppointmentController::class, 'pastBookings'])->name('pastBookings');
     
