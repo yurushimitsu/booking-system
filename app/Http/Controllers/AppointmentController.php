@@ -180,7 +180,7 @@ class AppointmentController extends Controller
             try {
                 // Server settings
                 $mail->isSMTP();                                             // Send using SMTP
-                $mail->Host       = 'smtp.gmail.com';                        // Set the SMTP server to send through
+                $mail->Host       = 'smtp.hostinger.com';                        // Set the SMTP server to send through
                 $mail->SMTPAuth   = true;                                    // Enable SMTP authentication
                 $mail->Username   = env('MAIL_USERNAME');            // SMTP username (your Gmail email address)
                 $mail->Password   = env('MAIL_PASSWORD');                   // SMTP password (your Gmail password or App password)
