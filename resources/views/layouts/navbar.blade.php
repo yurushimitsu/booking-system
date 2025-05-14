@@ -10,14 +10,13 @@
         </svg>
     </button>
     <div class="hidden w-full md:block md:w-auto" id="navbar-default">
-      <ul class="font-medium flex flex-col {{ (Route::is('agents')) ? 'text-white' : 'text-[#06064E]' }} p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
+      <ul class="font-medium flex flex-col {{ (Route::is('agents')) ? 'sm:text-gray-900 md:text-white' : 'text-[#06064E]' }} p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-white md:bg-transparent md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
         <li>
           <a href="http://intern-project.lk2jxa6hq2-95m32kpgd3rv.p.temp-site.link/homepage/" class="block py-2 px-3 rounded-sm md:border-0 md:p-0 hover:text-red-500">Homepage</a>
         </li>
         <li>
           <a href="{{ route('myBookings') }}" class="block py-2 px-3 rounded-sm md:border-0 md:p-0 hover:text-red-500 {{ (Route::is('myBookings')) ? 'text-red-500' : '' }}">
-            My Bookings 
-
+            My Bookings
             @if (Session::has('user_role') && session('user_role') == 'client' && $bookingCount > 0)
                 <span class="inline-flex items-center justify-center w-4 h-4 text-xs font-semibold text-white bg-red-600 rounded-full">
                     {{ $bookingCount }}
@@ -29,16 +28,12 @@
           <a href="{{ route('pastBookings') }}" class="block py-2 px-3 rounded-sm md:border-0 md:p-0 hover:text-red-500 {{ (Route::is('pastBookings')) ? 'text-red-500' : '' }}">Past Bookings</a>
         </li>
         @if (Session::has('user_role') && session('user_role') == 'client')
-          {{-- <li>
-            <a href="{{ route('clientLogout') }}" class="block py-2 px-3 rounded-sm md:border-0 md:p-0 hover:text-red-500">Logout</a>
-          </li> --}}
           <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="bg-transparent hover:text-red-500 text-center inline-flex items-center" type="button">
             {{ $client->client_name }}
             <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
             </svg>
           </button>
-            
             <!-- Dropdown menu -->
             <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44">
                 <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
