@@ -12,20 +12,27 @@
             </div>
         </div>
     </header>
-    <div class="py-10 px-20">
+    <div class="py-10 px-5">
         <div class="text-center">
             <h1 class="text-black font-extrabold text-2xl pb-10">Pathway Consultants</h1>
-            <div class="text-[#06064E] font-medium text-md pb-10">
-                Stay informed and inspired with our latest blog posts! From expert insights to <br>
-                industry trends, we bring you valuable content to enhance your knowledge and <br>
-                keep you updated. Read now and stay ahead!
+            <div class="flex justify-center text-[#06064E] font-medium text-md pb-10">
+                <div class="w-150">
+                    Stay informed and inspired with our latest blog posts! From expert insights to
+                    industry trends, we bring you valuable content to enhance your knowledge and
+                    keep you updated. Read now and stay ahead!
+                </div>
+                
             </div>
             <div class="pb-10">
                 <form class="max-w-lg mx-auto" id="searchForm">
                     <div class="flex shadow-lg">
                         <label for="dropdown-button" class="mb-2 text-sm font-medium text-gray-900 sr-only">Country</label>
-                        <button id="dropdown-button" data-dropdown-toggle="dropdownCountry" class="w-30 shrink-0 z-10 inline-flex items-center justify-center py-2.5 px-2 text-sm font-medium text-center text-white bg-[#06064E] border border-gray-300 rounded-s-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300" type="button">
-                            <div id="country-label">Country</div>
+                        <button id="dropdown-button" data-dropdown-toggle="dropdownCountry" class="shrink-0 z-10 inline-flex items-center justify-center py-2.5 px-3 text-sm font-medium text-center text-white bg-[#06064E] border border-gray-300 rounded-s-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300" type="button">
+                            <div id="country-label" class="hidden md:block">Country</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 block md:hidden">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
+                            </svg>
+
                             <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
                             </svg>
