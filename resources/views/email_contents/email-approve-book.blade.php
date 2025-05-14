@@ -86,6 +86,7 @@
             <strong>What: </strong> {{appointment_type}} Consultation<br>
             <strong>When: </strong> {{formalDate}} on {{formalTime}}<br>
             <strong>With: </strong> {{agentName}}<br>
+            <strong>Meeting Link: </strong> <a href="{{meetingLink}}">Click Here</a><br>
         </div>
         <p>If you have any questions or need to reschedule, please don't hesitate to contact us.</p>
     </div>
