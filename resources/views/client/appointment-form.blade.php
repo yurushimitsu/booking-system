@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title', 'Booking | Form')
+
 <body class="bg-[#F0F8FF]">
     <div class="flex items-center justify-center min-h-screen p-5 lg:p-4">
         <div class="w-4xl bg-white rounded-2xl shadow-lg">

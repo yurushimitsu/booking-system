@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title', 'Booking | Past Bookings')
+
 @section('body')
 
 @include('layouts.navbar')

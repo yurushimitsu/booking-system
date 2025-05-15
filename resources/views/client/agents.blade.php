@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title', 'Booking | Agents')
+
 @section('body')
 
 @include('layouts.navbar')

@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title', 'Booking | Change Password')
+
 @section('body')
 
 @include('layouts.navbar')

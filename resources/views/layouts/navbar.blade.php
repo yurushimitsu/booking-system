@@ -1,6 +1,6 @@
 <nav class="p-10 absolute inset-x-0 top-0 z-10 bg-transparent">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
-    <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+    <a href="{{ route('homepage') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
         <img src="{{ Route::is('agents') ? asset('img/fil-global-white-logo.png') : asset('img/fil-global-dark-logo.png') }}" class="h-15" alt="Fil-Global Logo" />
     </a>
     <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200" aria-controls="navbar-default" aria-expanded="false">
@@ -12,7 +12,7 @@
     <div class="hidden w-full md:block md:w-auto" id="navbar-default">
       <ul class="font-medium flex flex-col {{ (Route::is('agents')) ? 'text-gray-900 md:text-white' : 'text-[#06064E]' }} p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-white md:bg-transparent md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
         <li>
-          <a href="http://intern-project.lk2jxa6hq2-95m32kpgd3rv.p.temp-site.link/homepage/" class="block py-2 px-3 rounded-sm md:border-0 md:p-0 hover:text-red-500">Homepage</a>
+          <a href="{{ route('homepage') }}" class="block py-2 px-3 rounded-sm md:border-0 md:p-0 hover:text-red-500 {{ (Route::is('homepage')) ? 'text-red-500' : '' }}">Homepage</a>
         </li>
         <li>
           <a href="{{ route('myBookings') }}" class="block py-2 px-3 rounded-sm md:border-0 md:p-0 hover:text-red-500 {{ (Route::is('myBookings')) ? 'text-red-500' : '' }}">

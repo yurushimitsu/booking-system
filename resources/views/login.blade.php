@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title', 'Booking | Login')
+
 @section('body')
 <body>
     <section class="bg-gray-50">
