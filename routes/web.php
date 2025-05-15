@@ -21,8 +21,8 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('client.index');
+})->name('homepage');
 
 Route::middleware(['guest'])->prefix('login')->group(function () {
     Route::get('/', [LoginController::class, 'login'])->name('login');
@@ -30,7 +30,7 @@ Route::middleware(['guest'])->prefix('login')->group(function () {
 });
 
 Route::middleware(['guest'])->group(function () {
-    Route::get('/', [DashboardController::class, 'getAllAgents'])->name('agents');
+    Route::get('/agents', [DashboardController::class, 'getAllAgents'])->name('agents');
     Route::get('/booking-count', [DashboardController::class, 'bookingCount'])->name('bookingCount');
 
     Route::get('/search-agent', [DashboardController::class, 'searchAgent'])->name('searchAgent');
