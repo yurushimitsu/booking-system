@@ -8,7 +8,7 @@
 
 <body style="background-image: url('{{ asset('img/homepage-bg.png') }}');" class="bg-cover bg-center bg-no-repeat">
      <div class="flex flex-col justify-center items-center min-h-screen">
-        <div class="text-3xl md:text-5xl text-[#0F0564] text-center font-bold mb-10">
+        <div class="px-3 md:p-0 text-3xl md:text-5xl text-[#0F0564] text-center font-bold mb-10">
             Schedule with ease - <br>
             Book your appointment now!
         </div>
