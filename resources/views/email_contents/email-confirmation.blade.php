@@ -87,7 +87,7 @@
             <strong>When: </strong> {{formalDate}} on {{formalTime}}<br>
             <strong>With: </strong> {{agentName}}<br>
         </div>
-        <p> This appointment was made on <b>{{todayDate}}</b>. You can check the status of your appointment in our website at <a href="https://booking.jfmanalili.online/login">JFManalili Booking System</a>.
+        <p> This appointment was made on <b>{{todayDate}}</b>. You can check the status of your appointment in our website at <a href="https://booking.jfmanalili.com/login">JFManalili Booking System</a>.
 
             {{tempPassSection}}
 
