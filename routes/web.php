@@ -20,9 +20,7 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 |
 */
 
-Route::get('/', function () {
-    return view('client.index');
-})->name('homepage');
+Route::get('/', [AppointmentController::class, 'homepage'])->name('homepage');
 
 Route::middleware(['guest'])->prefix('login')->group(function () {
     Route::get('/', [LoginController::class, 'login'])->name('login');

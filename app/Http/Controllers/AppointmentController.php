@@ -379,4 +379,21 @@ class AppointmentController extends Controller
 
         return view('client.past-bookings', compact('client', 'approvedBookings', 'rejectedBookings', 'bookingCount'));
     }
+
+    public function homepage() {
+        $client = Client::where('client_id', session('user_id'))->first();
+        
+        if ($client) {
+            $bookingCount = DB::table('appointments')
+                            ->join('agents', 'appointments.agent_id', '=', 'agents.agent_id')
+                            ->where('email', $client->client_email)
+                            ->where('status', 'accepted')
+                            ->where('appointment_date', '>', Carbon::now())
+                            ->orderBy('appointment_date')
+                            ->count();
+                            
+            return view('client.index', compact('client', 'bookingCount'));
+        }
+        return view('client.index');
+    }
 }
