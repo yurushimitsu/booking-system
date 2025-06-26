@@ -40,7 +40,7 @@
                         </div>
                         <button type="submit" class="w-full text-white cursor-pointer bg-blue-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sign in</button>
                         <p class="text-sm font-light text-gray-500">
-                            Don’t have an account yet? <a href="#" class="font-medium text-primary-600 hover:underline">Sign up</a>
+                            Don’t have an appointment yet? <a href="{{ route('homepage') }}" class="font-medium text-primary-600 hover:underline">Book now</a>
                         </p>
                     </form>
                 </div>
