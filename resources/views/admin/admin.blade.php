@@ -1044,7 +1044,7 @@
                     <div>Purpose:</div>
                     <div class="break-words">${appointment.appointment_type}</div>
                     <div>Link:</div>
-                    <div class="break-words">${appointment.meeting_link}</div>
+                    <div><a href="${appointment.meeting_link}" target="_blank" class="underline text-blue-500 hover:text-blue-700 break-words">${appointment.meeting_link}</a></div>
                     <div>Status:</div>
                     <div class="break-words">${appointment.status}</div>
                 </div>
