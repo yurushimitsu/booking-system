@@ -138,6 +138,7 @@
                 
         // Get today's date and set it as the min value for the date picker 
         let today = new Date();
+        today.setDate(today.getDate() + 1); // Min date is tommorow's date
         let yyyy = today.getFullYear();
         let mm = today.getMonth() + 1; // Month is zero-indexed
         let dd = today.getDate();
@@ -145,8 +146,8 @@
         if (mm < 10) mm = '0' + mm;  // Add leading zero if necessary
         if (dd < 10) dd = '0' + dd;  // Add leading zero if necessary
         
-        let todayDate = `${yyyy}-${mm}-${dd}`;
-        dateInput.setAttribute('min', todayDate);
+        let tomorrowDate = `${yyyy}-${mm}-${dd}`;
+        dateInput.setAttribute('min', tomorrowDate);
         
         // Function to validate the selected date (to disable Saturdays and Sundays)
         dateInput.addEventListener('input', function() {
