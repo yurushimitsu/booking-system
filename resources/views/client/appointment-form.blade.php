@@ -177,7 +177,7 @@
             }
 
             // Send an AJAX request to get appointments for the selected date
-            fetch(`/user/getAppointmentsForDate?date=${selectedDate}&agent_account_no=${agentAccountNo}`)
+            fetch(`/getAppointmentsForDate?date=${selectedDate}&agent_account_no=${agentAccountNo}`)
                 .then(response => response.json())
                 .then(data => {
                     let appointmentTimes = data; // Array of appointment times
