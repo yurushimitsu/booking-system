@@ -25,6 +25,9 @@ Route::get('/', [AppointmentController::class, 'homepage'])->name('homepage');
 Route::middleware(['guest'])->prefix('login')->group(function () {
     Route::get('/', [LoginController::class, 'login'])->name('login');
     Route::post('/', [LoginController::class, 'loginPost'])->name('login.submit');
+
+    Route::get('/forgot-password', [LoginController::class, 'forgotPassword'])->name('forgotPassword');
+    Route::post('/forgot-password', [LoginController::class, 'forgotPasswordPost'])->name('forgotPassword.submit');
 });
 
 Route::middleware(['guest'])->group(function () {

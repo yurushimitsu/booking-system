@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="flex items-center justify-end">
-                            <a href="#" class="text-sm font-medium text-primary-600 hover:underline">Forgot password?</a>
+                            <a href="{{ route('forgotPassword') }}" class="text-sm font-medium text-primary-600 hover:underline">Forgot password?</a>
                         </div>
                         <button type="submit" class="w-full text-white cursor-pointer bg-blue-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sign in</button>
                         <p class="text-sm font-light text-gray-500">
