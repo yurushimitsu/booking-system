@@ -95,9 +95,9 @@
                     <div class="text-2xl font-bold">
                         Your appointments
                     </div>
-                    <a href="#" class="text-sm text-blue-700">
+                    {{-- <a href="#" class="text-sm text-blue-700">
                         Archives
-                    </a>
+                    </a> --}}
                 </div>
                 <div class="">
                     <table id="pendingAppointmentsTable" class="display whitespace-nowrap">
