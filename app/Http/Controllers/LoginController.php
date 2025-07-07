@@ -65,9 +65,8 @@ class LoginController extends Controller
                         ->where('role', 'client')
                         ->first();
 
-        $client = Client::where('client_id', $user->account_no)->first();
-        
         if ($user) {
+            $client = Client::where('client_id', $user->account_no)->first();
             $tempPass = Str::random(10);
             $user->account_password = Hash::make($tempPass);
             $user->new_user = 1;
